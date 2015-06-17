@@ -1,0 +1,17 @@
+#!/bin/sh
+
+###  Append the current date & time to top(1) & vmstat(1) logs located in /var/www/miq/vmdb/log ###
+
+LOG_DIR=/var/www/miq/vmdb/log
+
+for CMD in top vmstat
+do
+	LOG_FILE=${LOG_DIR}/${CMD}
+
+	if [ -e ${LOG_FILE} ]
+	then
+		echo "miqtop: timesync: date time is-> $(date) $(date +%z)" >> ${LOG_FILE}
+	fi
+done
+
+exit 0

@@ -1,0 +1,10 @@
+[Unit]
+Description="top(1) data collection"
+After=syslog.target
+
+[Service]
+ExecStart=/bin/sh -c "/bin/miqtop.sh"
+Type=forking
+
+[Install]
+WantedBy=multi-user.target

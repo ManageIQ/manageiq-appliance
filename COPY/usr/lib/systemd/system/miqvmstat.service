@@ -1,0 +1,10 @@
+[Unit]
+Description="vmstat(1) data collection"
+After=syslog.target
+
+[Service]
+ExecStart=/bin/sh -c "/bin/miqvmstat.sh"
+Type=forking
+
+[Install]
+WantedBy=multi-user.target
