@@ -1,0 +1,10 @@
+[Unit]
+Description="Initializes the evm environment"
+After=syslog.target
+
+[Service]
+ExecStart=/bin/sh -c "/bin/evminit.sh"
+Type=oneshot
+
+[Install]
+WantedBy=multi-user.target
