@@ -1,0 +1,13 @@
+[Unit]
+Description=evm console process
+After=plymouth-quit.service
+
+[Service]
+ExecStart=/bin/appliance_console
+Restart=on-failure
+TTYPath=/dev/tty2
+StandardOutput=tty
+StandardInput=tty
+
+[Install]
+WantedBy=plymouth-quit.service
