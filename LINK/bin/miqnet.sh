@@ -499,8 +499,7 @@ stop_miqvmstat() {
 }
 
 stop_httpd() {
-  ## TODO move to systemctl
-  service httpd stop > /dev/null 2>> $ERR_FILE
+  systemctl stop httpd stop > /dev/null 2>> $ERR_FILE
 }
 
 stop_vmdb() {
