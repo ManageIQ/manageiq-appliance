@@ -499,7 +499,7 @@ stop_miqvmstat() {
 }
 
 stop_httpd() {
-  systemctl stop httpd stop > /dev/null 2>> $ERR_FILE
+  systemctl stop httpd > /dev/null 2>> $ERR_FILE
 }
 
 stop_vmdb() {
