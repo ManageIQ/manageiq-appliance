@@ -111,23 +111,13 @@ get_info () {
 
 set_time() {
   log "set_time: args: $@"
+
   if [ $# -ne 2 ]; then
     echo -e $USAGETEXT >&2
     exit 1
   fi
 
-  # Set the date and time
-  date -s "$1 $2" > /dev/null 2>&1
-  if [ $? -ne 0 ]; then
-    echo "Setting date failed" >&2
-    exit 1
-  fi
-
-  /sbin/hwclock --systohc --utc > /dev/null 2>&1
-  if [ $? -ne 0 ]; then
-    echo "Setting hardware clock failed" >&2
-    exit 1
-  fi
+  timedatectl set-time "${1} ${2}" --adjust-system-clock
 }
 
 set_timezone() {
@@ -138,29 +128,7 @@ set_timezone() {
     exit 1
   fi
 
-  log "set_timezone: localtime old: $(ls -l /etc/localtime)"
-  rm -f /etc/localtime
-  ln -sf /usr/share/zoneinfo/$1/$2 /etc/localtime
-  if [ $? -ne 0 ]; then
-    echo "Setting timezone failed" >&2
-    log "set_timezone: localtime new: $(ls -l /etc/localtime)"
-    exit 1
-  fi
-  log "set_timezone: localtime new: $(ls -l /etc/localtime)"
-
-  log "set_redhat_timezone: args: $@"
-
-  log "set_redhat_timezone: clock old: $(cat /etc/sysconfig/clock)"
-  cp /etc/sysconfig/clock{,.bak}
-  sed "s/^ZONE=.\+/ZONE=\"$1\/$2\"/" /etc/sysconfig/clock > /etc/sysconfig/clock.new
-  if [ $? -ne 0 ]; then
-    echo "Setting redhat timezone failed" >&2
-    mv /etc/sysconfig/clock.bak /etc/sysconfig/clock
-    exit 1
-  fi
-  mv /etc/sysconfig/clock.new /etc/sysconfig/clock
-  rm -f /etc/sysconfig/clock.bak
-  log "set_redhat_timezone: clock new: $(cat /etc/sysconfig/clock)"
+  timedatectl set-timezone "${1}/${2}"
 }
 
 set_hostname() {
