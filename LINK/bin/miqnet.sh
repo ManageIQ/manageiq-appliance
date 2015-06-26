@@ -39,8 +39,11 @@ get_timeserver () {
   awk '/^server/ { print $2}' /etc/chrony.conf
 }
 
-get_mac () {
-  cat /etc/sysconfig/network-scripts/ifcfg-eth0 | awk -F '=' '/HWADDR/ { print $2; exit }'
+get_mac ()
+  ###
+  ## TODO: Remove hard coded eth0
+  ###
+  ip addr show eth0 | awk '/ether/ { print $2 }'
 }
 
 get_ip () {
