@@ -39,7 +39,7 @@ get_timeserver () {
   awk '/^server/ { print $2}' /etc/chrony.conf
 }
 
-get_mac ()
+get_mac () {
   ###
   ## TODO: Remove hard coded eth0
   ###
