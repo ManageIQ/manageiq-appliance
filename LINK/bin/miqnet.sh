@@ -55,10 +55,7 @@ get_netmask () {
 }
 
 get_gateway () {
-  ###
-  # TODO Migrate away from route
-  ###
-  route | awk '/default/ { print $2 }'
+  ip route | awk '/^default/ { print $3 }'
 }
 
 get_dns1 () {
