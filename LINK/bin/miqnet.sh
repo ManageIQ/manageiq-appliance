@@ -47,7 +47,28 @@ get_mac () {
 }
 
 get_ip () {
-  hostname -I | cut -d' ' -f1
+
+  ###
+  # We try up to 5 times to get the IP address to handle environments where IP address acquisition from DHCP
+  # is slow, resulting in the appliance_console looking for an address before one has been obtained.
+  # TODO: research why the AFTER directive in the console systemd service definitiion did not appear
+  #       to hold off appliance startup until the network was fully up.
+  ###
+  RETRYCNT=1
+  MAXTRIES=5
+  DELAY_SECONDS=1
+
+  while [ ${RETRYCNT} -le ${MAXTRIES} ]
+  do
+    IPADDR=$(hostname -I | cut -d' ' -f1)
+    if [ "${IPADDR} " != " " ] ; then
+      echo "${IPADDR}"
+      break
+    else
+      RETRYCNT=`expr ${RETRYCNT} + 1`
+      sleep ${DELAY_SECONDS}
+    fi
+  done
 }
 
 get_netmask () {
