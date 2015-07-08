@@ -46,13 +46,13 @@ status() {
 }
 
 update_start() {
-  $RAKE evm:update_start
+  $RAKE evm:update_start >> /var/www/miq/vmdb/log/evm.log 2>&1
   RETVAL=$?
   return $RETVAL
 }
 
 update_stop() {
-  $RAKE evm:update_stop
+  $RAKE evm:update_stop >> /var/www/miq/vmdb/log/evm.log 2>&1
   RETVAL=$?
   return $RETVAL
 }
