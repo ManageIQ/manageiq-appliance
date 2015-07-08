@@ -36,23 +36,47 @@ get_hostname () {
 }
 
 get_timeserver () {
-  cat /etc/default/ntpdate | awk '/^NTPSERVERS/ { print substr($1, 13, length($1)-13) }'
+  awk '/^server/ { print $2}' /etc/chrony.conf
 }
 
 get_mac () {
-  ifconfig eth0 | awk '/HWaddr/ { print $5 }'
+  ###
+  ## TODO: Remove hard coded eth0
+  ###
+  ip addr show eth0 | awk '/ether/ { print $2 }'
 }
 
 get_ip () {
-  ifconfig eth0 | awk '/inet addr:/ { print $2 }' | cut -d: -f2
+
+  ###
+  # We try up to 5 times to get the IP address to handle environments where IP address acquisition from DHCP
+  # is slow, resulting in the appliance_console looking for an address before one has been obtained.
+  # TODO: research why the AFTER directive in the console systemd service definitiion did not appear
+  #       to hold off appliance startup until the network was fully up.
+  ###
+  RETRYCNT=1
+  MAXTRIES=5
+  DELAY_SECONDS=1
+
+  while [ ${RETRYCNT} -le ${MAXTRIES} ]
+  do
+    IPADDR=$(hostname -I | cut -d' ' -f1)
+    if [ "${IPADDR} " != " " ] ; then
+      echo "${IPADDR}"
+      break
+    else
+      RETRYCNT=`expr ${RETRYCNT} + 1`
+      sleep ${DELAY_SECONDS}
+    fi
+  done
 }
 
 get_netmask () {
-  ifconfig eth0 | awk '/inet addr:/ { print $4 }' | cut -d: -f2
+  ifconfig eth0 | awk '/netmask/ { print $4 }' | cut -d: -f2
 }
 
 get_gateway () {
-  route -n | awk '/^0\.0\.0\.0/ { print $2 }'
+  ip route | awk '/^default/ { print $3 }'
 }
 
 get_dns1 () {
@@ -78,7 +102,7 @@ get_search_order () {
 }
 
 get_timezone () {
-  cat /etc/sysconfig/clock | awk '/^ZONE/ { print substr($1,7,length($1)-7) }'
+  timedatectl status | awk '/Timezone/ {print $2}'
 }
 
 get_info () {
@@ -105,23 +129,13 @@ get_info () {
 
 set_time() {
   log "set_time: args: $@"
+
   if [ $# -ne 2 ]; then
     echo -e $USAGETEXT >&2
     exit 1
   fi
 
-  # Set the date and time
-  date -s "$1 $2" > /dev/null 2>&1
-  if [ $? -ne 0 ]; then
-    echo "Setting date failed" >&2
-    exit 1
-  fi
-
-  /sbin/hwclock --systohc --utc > /dev/null 2>&1
-  if [ $? -ne 0 ]; then
-    echo "Setting hardware clock failed" >&2
-    exit 1
-  fi
+  timedatectl set-time "${1} ${2}" --adjust-system-clock
 }
 
 set_timezone() {
@@ -132,74 +146,31 @@ set_timezone() {
     exit 1
   fi
 
-  log "set_timezone: localtime old: $(ls -l /etc/localtime)"
-  rm -f /etc/localtime
-  ln -sf /usr/share/zoneinfo/$1/$2 /etc/localtime
-  if [ $? -ne 0 ]; then
-    echo "Setting timezone failed" >&2
-    log "set_timezone: localtime new: $(ls -l /etc/localtime)"
-    exit 1
-  fi
-  log "set_timezone: localtime new: $(ls -l /etc/localtime)"
-
-  log "set_redhat_timezone: args: $@"
-
-  log "set_redhat_timezone: clock old: $(cat /etc/sysconfig/clock)"
-  cp /etc/sysconfig/clock{,.bak}
-  sed "s/^ZONE=.\+/ZONE=\"$1\/$2\"/" /etc/sysconfig/clock > /etc/sysconfig/clock.new
-  if [ $? -ne 0 ]; then
-    echo "Setting redhat timezone failed" >&2
-    mv /etc/sysconfig/clock.bak /etc/sysconfig/clock
-    exit 1
-  fi
-  mv /etc/sysconfig/clock.new /etc/sysconfig/clock
-  rm -f /etc/sysconfig/clock.bak
-  log "set_redhat_timezone: clock new: $(cat /etc/sysconfig/clock)"
+  timedatectl set-timezone "${1}/${2}"
 }
 
 set_hostname() {
-  if [ -z $1 ]; then
-    echo -e $USAGETEXT >&2
+  if [ -z ${1} ]; then
+    echo -e ${USAGETEXT} >&2
     exit 1
   fi
 
-  log "set_redhat_hostname: args: $@"
-  network="/etc/sysconfig/network"
+  log "set_hostname: old hostname: $(hostname)"
 
-  # Backup the network file
-  cp $network ${network}.bak
+  hostnamectl set-hostname ${1}
 
-  log "set_redhat_hostname: network old: $(cat $network)"
-  # Remove the existing networking and hostname lines and then append them
-  cat $network | grep -v -E "^(NETWORKING|HOSTNAME)" > ${network}.tmp
-  echo "NETWORKING=yes
-HOSTNAME=$1" >> ${network}.tmp
-  mv ${network}.tmp $network
-  rm ${network}.bak
-  log "set_redhat_hostname: network new: $(cat $network)"
-  log "set_redhat_hostname: hosts old: $(cat /etc/hosts)"
-  # Backup hosts
-  cp /etc/hosts /etc/hosts.bak
-
-  ip=$(get_ip)
-
-  # Update the hostname associated with the ip address
-  grep -E "^$ip" /etc/hosts > /dev/null
+  # Update or add the hostname to the associated ip address
+  grep -E "^${IP_ADDR}" /etc/hosts > /dev/null
   if [ $? -eq 0 ]; then
-    # Change the hostname for our ip to the new hostname
-    sed "s/\(^$ip\>\s*\)\(.*\<.*$\)/\1$1/" /etc/hosts > /etc/hosts.new
+    sed "s/\(^${IP_ADDR}\>\s*\)\(.*\<.*$\)/\1${1}/" /etc/hosts > /etc/hosts.new
     mv /etc/hosts.new /etc/hosts
   else
-    # Add a line with the new hostname and our ip
-    echo -e "$ip\t\t$1" >> /etc/hosts
+    echo -e "${IP_ADDR}\t\t${1}" >> /etc/hosts
   fi
 
-  rm /etc/hosts.bak
-  log "set_redhat_hostname: hosts new: $(cat /etc/hosts)"
+  systemctl restart network > /dev/null 2>> $ERR_FILE
 
-  hostname $1
-
-  service network restart > /dev/null 2>> $ERR_FILE
+  log "set_hostname: new hostname: $(hostname)"
 }
 
 restart_os() {
@@ -212,6 +183,7 @@ restart_os_rm_logs() {
   LOG_LINE='[----] I, ['`date -u`']  APPLIANCE RESTART WITH CLEAN LOGS initiated by MIQ Console.' && echo $LOG_LINE >> $EVMLOG && echo $LOG_LINE >> $LOG_FILE
   stop_vmdb
   stop_miqtop
+  stop_miqvmstat
   stop_httpd
   rm -rf /var/www/miq/vmdb/log/*.log*
   rm -rf /var/www/miq/vmdb/log/apache/*.log*
@@ -227,34 +199,16 @@ shutdown_os() {
 
 set_timeserver() {
   if [ -z $1 ]; then
-    echo -e $USAGETEXT >&2
-    exit 1
+      echo -e $USAGETEXT >&2
+      exit 1
   fi
 
-  if [ -z $2 ]; then
-    echo -e $USAGETEXT >&2
-    exit 1
+  if [ $(grep -c $1 /etc/chrony.conf) -ne 0 ]; then
+      echo "miqnet.sh: server $1 already registered in /etc/chrony.conf"
+      exit 1
+  else
+      echo -e "\n# Added by miqnet.sh\nserver $1" >> /etc/chrony.conf
   fi
-
-  if [ $? -eq 0 ]; then
-    echo "NTPDATE_USE_NTP_CONF=\"no\"" > /etc/default/ntpdate
-    echo "NTPSERVERS=\"$1\"" >> /etc/default/ntpdate
-  fi
-
-  echo $2 | egrep -q '^[1-5][0-9]$' > /dev/null
-  if [ $? -ne 0 ]; then
-    echo "The range of the synchronization period should be [10-59] minutes." >&2
-    exit 1
-  fi
-
-  sed '/.*\<ntpdate-debian/d' /var/spool/cron/crontabs/root > /var/spool/cron/crontabs/root.bak
-  echo "*/$2 * * * * /usr/sbin/ntpdate-debian >> /var/log/ntpdate-debian 2>&1" >> /var/spool/cron/crontabs/root.bak
-
-  cp /var/spool/cron/crontabs/root.bak /var/spool/cron/crontabs/root
-  crontab -u root /var/spool/cron/crontabs/root
-  rm /var/spool/cron/crontabs/root.bak
-
-  ntpdate-debian $1 >> /var/log/ntpdate-debian 2>&1
 }
 
 set_static () {
@@ -307,7 +261,7 @@ set_redhat_static () {
   cp $cfg ${cfg}.bak
 
   # Get the old ip address
-  old_ip=$(get_ip)
+  old_ip=$(hostname -I | cut -d' ' -f1)
 
   # Bring down eth0
   ifdown eth0 > /dev/null 2>&1
@@ -320,7 +274,10 @@ set_redhat_static () {
   echo "BOOTPROTO=static
 BROADCAST=${ipfirst3}.255
 IPADDR=${1}
-NETMASK=${2}" >> ${cfg}.tmp
+NETMASK=${2}
+GATEWAY=${3}
+NM_CONTROLLED=no
+DNS1=${4}" >> ${cfg}.tmp
   mv ${cfg}.tmp $cfg
   log "set_redhat_static: cfg new: $(cat ${cfg})"
 
@@ -330,14 +287,14 @@ NETMASK=${2}" >> ${cfg}.tmp
   /sbin/restorecon -R /etc/sysconfig
 
   # 2) reload config and bring up the interface to see if it worked
-  service network reload > /dev/null 2>> $ERR_FILE
+  systemctl restart network > /dev/null 2>> $ERR_FILE
   ifup eth0 >> $TMP_IO 2 >> $ERR_FILE
   if [ $? -ne 0 ]; then
     cat $TMP_IO >> $ERR_FILE
     log "set_redhat_static: ifup eth0 failed due to error: $(cat $ERR_FILE)...reloading from backup"
     # Restore from backup and exit
     mv ${cfg}.bak $cfg
-    service network reload > /dev/null 2>&1
+    systemctl restart network > /dev/null 2>&1
     ifup eth0 > /dev/null 2>&1
     echo "Unable to set static network configuration." >&2
     rm -f /tmp/miq_errors
@@ -347,6 +304,7 @@ NETMASK=${2}" >> ${cfg}.tmp
   rm -f ${cfg}.bak
 
   log "set_redhat_static: network cfg old: $(cat ${network})"
+
   #3 /etc/sysconfig/network: enable networking, populate gateway
   cat $network | grep -v -E "^(NETWORKING|GATEWAY)" > ${network}.tmp
   echo "NETWORKING=yes
@@ -354,6 +312,7 @@ GATEWAY=${3}" >> ${network}.tmp
   mv ${network}.tmp $network
   log "set_redhat_static: network cfg new: $(cat ${network})"
   log "set_redhat_static: route old: $(route)"
+
   # 4) Remove an old default gateway and add the new one
   # Append to the ERR_FILE anything written to stderr when deleting or adding routes
   old=`route -n | awk '/^0\.0\.0\.0/ { print $2 }'`
@@ -521,17 +480,21 @@ check_rc() {
 }
 
 stop_miqtop() {
-  service miqtop stop > /dev/null 2>> $ERR_FILE
+  systemctl stop miqtop
+}
+
+stop_miqvmstat() {
+  systemctl stop miqvmstat
 }
 
 stop_httpd() {
-  service httpd stop > /dev/null 2>> $ERR_FILE
+  systemctl stop httpd > /dev/null 2>> $ERR_FILE
 }
 
 stop_vmdb() {
   LOG_LINE='[----] I, ['`date -u`']  EVM SERVER STOP initiated by MIQ Console.' && echo $LOG_LINE >> $EVMLOG
   log "EVM SERVER STOP initiated by MIQ Console."
-  service evmserverd stop >> $LOG_FILE 2>> $ERR_FILE
+  systemctl stop  evmserverd >> $LOG_FILE 2>> $ERR_FILE
   check_rc "stop_vmdb"
   rc=$?
 
@@ -583,7 +546,7 @@ close_pid_fd() {
 start_vmdb(){
   LOG_LINE='[----] I, ['`date -u`']  EVM SERVER START initiated by MIQ Console.' && echo $LOG_LINE >> $EVMLOG
   log "EVM SERVER START initiated by MIQ Console."
-  service evmserverd start >> $LOG_FILE 2>> $ERR_FILE
+  systemctl start evmserverd >> $LOG_FILE 2>> $ERR_FILE
   check_rc "start_vmdb"
 }
 

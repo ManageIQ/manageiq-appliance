@@ -1,0 +1,14 @@
+[Unit]
+Description=evm console process
+After=plymouth-quit.service
+Before=getty.target
+
+[Service]
+ExecStart=/bin/appliance_console
+Restart=always
+TTYPath=/dev/tty1
+StandardOutput=tty
+StandardInput=tty
+
+[Install]
+WantedBy=getty.target

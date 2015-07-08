@@ -1,0 +1,10 @@
+[Unit]
+Description=evm watchdog process
+After=evmserverd.service
+
+[Service]
+ExecStart=/bin/evm_watchdog
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
