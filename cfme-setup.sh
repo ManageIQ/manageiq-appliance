@@ -7,9 +7,6 @@ pushd /var/www/miq/vmdb
   RAILS_ENV=production rake evm:compile_assets
 popd
 
-#this is for the black console
-sed -i 's@ACTIVE_CONSOLES=/dev/tty\[1-6\]@ACTIVE_CONSOLES=/dev/tty3@' /etc/sysconfig/init
-
 # httpd needs to connect to backend workers on :3000 and :4000
 setsebool -P httpd_can_network_connect on
 
