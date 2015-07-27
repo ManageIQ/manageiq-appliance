@@ -31,6 +31,11 @@ log() {
   echo "$(date) $(date +%z): $@" >> $LOG_FILE
 }
 
+safe_mv () {
+  mv $1 $2
+  restorecon $2
+}
+
 get_hostname () {
   hostname
 }
@@ -163,7 +168,7 @@ set_hostname() {
   grep -E "^${IP_ADDR}" /etc/hosts > /dev/null
   if [ $? -eq 0 ]; then
     sed "s/\(^${IP_ADDR}\>\s*\)\(.*\<.*$\)/\1${1}/" /etc/hosts > /etc/hosts.new
-    mv /etc/hosts.new /etc/hosts
+    safe_mv /etc/hosts.new /etc/hosts
   else
     echo -e "${IP_ADDR}\t\t${1}" >> /etc/hosts
   fi
@@ -243,7 +248,7 @@ set_static () {
   if [ ! -z $5 ]; then
     echo nameserver $5 >> /etc/resolv.conf.new
   fi
-  mv /etc/resolv.conf.new /etc/resolv.conf
+  safe_mv /etc/resolv.conf.new /etc/resolv.conf
   log "set_static: resolve new: $(cat /etc/resolv.conf)"
 }
 
@@ -278,13 +283,11 @@ NETMASK=${2}
 GATEWAY=${3}
 NM_CONTROLLED=no
 DNS1=${4}" >> ${cfg}.tmp
-  mv ${cfg}.tmp $cfg
+  safe_mv ${cfg}.tmp $cfg
   log "set_redhat_static: cfg new: $(cat ${cfg})"
 
   # Truncate the temporary io file
   :> $TMP_IO
-
-  /sbin/restorecon -R /etc/sysconfig
 
   # 2) reload config and bring up the interface to see if it worked
   systemctl restart network > /dev/null 2>> $ERR_FILE
@@ -293,7 +296,7 @@ DNS1=${4}" >> ${cfg}.tmp
     cat $TMP_IO >> $ERR_FILE
     log "set_redhat_static: ifup eth0 failed due to error: $(cat $ERR_FILE)...reloading from backup"
     # Restore from backup and exit
-    mv ${cfg}.bak $cfg
+    safe_mv ${cfg}.bak $cfg
     systemctl restart network > /dev/null 2>&1
     ifup eth0 > /dev/null 2>&1
     echo "Unable to set static network configuration." >&2
@@ -309,7 +312,7 @@ DNS1=${4}" >> ${cfg}.tmp
   cat $network | grep -v -E "^(NETWORKING|GATEWAY)" > ${network}.tmp
   echo "NETWORKING=yes
 GATEWAY=${3}" >> ${network}.tmp
-  mv ${network}.tmp $network
+  safe_mv ${network}.tmp $network
   log "set_redhat_static: network cfg new: $(cat ${network})"
   log "set_redhat_static: route old: $(route)"
 
@@ -338,7 +341,7 @@ GATEWAY=${3}" >> ${network}.tmp
   if [ $? -eq 0 ]; then
     # Change the ip associated with the hostname to the new ip
     sed "s/\(^$old_ip\)\(\>\s*.*\<.*$\)/$1\2/" /etc/hosts > /etc/hosts.new
-    mv /etc/hosts.new /etc/hosts
+    safe_mv /etc/hosts.new /etc/hosts
   else
     # Add a line with the new ip and the existing hostname
     echo -e "$1\t\t$hn" >> /etc/hosts
@@ -366,7 +369,7 @@ set_search_order() {
   # Modify domain search entries in /etc/resolv.conf
   grep -v -E "^search" /etc/resolv.conf > /etc/resolv.conf.new
   echo "search $new_order" >> /etc/resolv.conf.new
-  mv /etc/resolv.conf.new /etc/resolv.conf
+  safe_mv /etc/resolv.conf.new /etc/resolv.conf
   log "set_search_order: resolve new: $(cat /etc/resolv.conf)"
 }
 
@@ -380,7 +383,7 @@ set_dhcp() {
   # Remove the nameserver and search lines in /etc/resolv.conf since dhcp will populate them
   log "set_dhcp: resolve old: $(cat /etc/resolv.conf)"
   grep -v -E "^(nameserver|search)" /etc/resolv.conf > /etc/resolv.conf.new
-  mv /etc/resolv.conf.new /etc/resolv.conf
+  safe_mv /etc/resolv.conf.new /etc/resolv.conf
 
   set_${DISTRO}_dhcp "$@"
   log "set_dhcp: resolve new: $(cat /etc/resolv.conf)"
@@ -406,13 +409,13 @@ set_redhat_dhcp() {
 
   # append the temp file with the data we are replacing
   echo "BOOTPROTO=dhcp" >> ${cfg}.tmp
-  mv ${cfg}.tmp $cfg
+  safe_mv ${cfg}.tmp $cfg
   log "set_redhat_dhcp: cfg new: $(cat ${cfg})"
   log "set_redhat_dhcp: network old: $(cat ${network})"
   # 2) Remove the GATEWAY lines in /etc/sysconfig/network
   cat $network | grep -v -E "^(NETWORKING|GATEWAY)" > ${network}.tmp
   echo "NETWORKING=yes" >> ${network}.tmp
-  mv ${network}.tmp $network
+  safe_mv ${network}.tmp $network
   log "set_redhat_dhcp: network new: $(cat ${network})"
 
   log "set_redhat_dhcp: route old: $(route)"
@@ -426,8 +429,6 @@ set_redhat_dhcp() {
   # Truncate the temporary io file
   :> $TMP_IO
 
-  /sbin/restorecon -R /etc/sysconfig
-
   # 4) Start the interface to see if it worked
   ifup eth0 >> $TMP_IO 2>> $ERR_FILE
   if [ $? -ne 0 ]; then
@@ -435,7 +436,7 @@ set_redhat_dhcp() {
     log "set_redhat_dhcp: ifup eth0 failed due to error: $(cat $ERR_FILE)...reloading from backup"
     # Restore from backup and exit
     ifdown eth0 > /dev/null 2>&1
-    mv ${cfg}.bak $cfg
+    safe_mv ${cfg}.bak $cfg
     ifup eth0 > /dev/null 2>&1
     echo "Unable to set DHCP network configuration." >&2
     exit 1
@@ -461,7 +462,7 @@ set_redhat_dhcp() {
   if [ $? -eq 0 ]; then
     # Change the ip associated with the hostname to the new ip
     sed "s/\(^$old_ip\)\(\>\s*.*\<.*$\)/$new_ip\2/" /etc/hosts > /etc/hosts.new
-    mv /etc/hosts.new /etc/hosts
+    safe_mv /etc/hosts.new /etc/hosts
   else
     # Add a line with the new ip and the existing hostname
     echo -e "$new_ip\t\t$hn" >> /etc/hosts
