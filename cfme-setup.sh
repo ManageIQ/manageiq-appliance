@@ -23,12 +23,12 @@ EOF
 
 /usr/sbin/semanage fcontext -a -t httpd_log_t "/var/www/miq/vmdb/log(/.*)?"
 /usr/sbin/semanage fcontext -a -t cert_t "/var/www/miq/vmdb/certs(/.*)?"
-/usr/sbin/semanage fcontext -a -t logrotate_exec_t /var/www/miq/system/logrotate_free_space_check.sh
+/usr/sbin/semanage fcontext -a -t logrotate_exec_t /var/www/manageiq-appliance/logrotate_free_space_check.sh
 
 [ -x /sbin/restorecon ] && /sbin/restorecon -R -v /var/www/miq/vmdb/log
 [ -x /sbin/restorecon ] && /sbin/restorecon -R -v /etc/sysconfig
 [ -x /sbin/restorecon ] && /sbin/restorecon -R -v /var/www/miq/vmdb/certs
-[ -x /sbin/restorecon ] && /sbin/restorecon -R -v /var/www/miq/system/logrotate_free_space_check.sh
+[ -x /sbin/restorecon ] && /sbin/restorecon -R -v /var/www/manageiq-appliance/logrotate_free_space_check.sh
 
 # relabel the pg_log directory in postgresql datadir, but defer restorecon
 # until after the database is initialized during firstboot configuration
