@@ -26,6 +26,6 @@ export QPID_SSL_CERT_DB=/etc/qpid/certs
 export KEY_ROOT=/var/www/miq/vmdb/certs
 
 [[ -s /etc/default/evm_bundler ]] && source /etc/default/evm_bundler
-[[ -s /opt/rh/rh-postgresql94/enable ]] && source /opt/rh/rh-postgresql94/enable
+[[ -s /etc/default/evm_postgres ]] && source /etc/default/evm_postgres
 [[ -s /opt/rh/nodejs010/enable ]] && source /opt/rh/nodejs010/enable
 [[ -s /etc/default/evm_productization ]] && source /etc/default/evm_productization

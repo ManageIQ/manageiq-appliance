@@ -1,0 +1,11 @@
+#!/bin/bash
+# Description: Sets the PostgreSQL environment for scripts and console users
+#
+
+export APPLIANCE_PG_CTL=/opt/rh/rh-postgresql94/root/usr/bin/pg_ctl
+export APPLIANCE_PG_DATA=/opt/rh/rh-postgresql94/root/var/lib/pgsql/data
+export APPLIANCE_PG_SERVICE=rh-postgresql94-postgresql
+export APPLIANCE_PG_SCL_NAME=rh-postgresql94
+export APPLIANCE_PG_PACKAGE_NAME=${APPLIANCE_PG_SCL_NAME}-postgresql-server
+
+[[ -s /opt/rh/${APPLIANCE_PG_SCL_NAME}/enable ]] && source /opt/rh/${APPLIANCE_PG_SCL_NAME}/enable
