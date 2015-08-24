@@ -32,7 +32,8 @@ EOF
 
 # relabel the pg_log directory in postgresql datadir, but defer restorecon
 # until after the database is initialized during firstboot configuration
-/usr/sbin/semanage fcontext -a -t var_log_t "/opt/rh/postgresql92/root/var/lib/pgsql/data/pg_log(/.*)?"
+/usr/sbin/semanage fcontext -a -t var_log_t "${APPLIANCE_PG_DATA}/pg_log(/.*)?"
+
 # setup label for postgres client certs, but relabel after dir is created
 /usr/sbin/semanage fcontext -a -t cert_t "/root/.postgresql(/.*)?"
 # will remove this once app is no longer running as root
