@@ -1,0 +1,21 @@
+#!/bin/bash
+
+# bail unless ($1 = eth0 && $2 = up) || ($1 = eth0 && $2 = hostname)
+# dont call exit
+if [ "$1" != "eth0" -o "$2" != "up" -a "$2" != "hostname" ] ; then
+  :
+else
+  # After a network interface is loaded
+  # this updates the /etc/issue file to show the ip address
+  # and product name
+
+  # extract PRODUCT from en:product:name
+  PRODUCT=sed -n ':a;N;s/\([ ]*product:\n[ ]*name: \)//p' /var/www/miq/vmdb/config/locales/en.yml
+  IP=`hostname -I | cut -d' ' -f1`
+
+  # replace \p with the product name
+  # replace \i with the ip address
+
+  sed /etc/issue.template -e "s/\\\\P/${PRODUCT}/g" -e "s/\\\\i/${IP}/g" > /etc/issue
+  cp /etc/issue /etc/issue.net
+fi
