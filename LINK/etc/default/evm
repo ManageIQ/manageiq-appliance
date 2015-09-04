@@ -25,8 +25,8 @@ export QPID_SSL_CERT_DB=/etc/qpid/certs
 # Location of certificates and provider keys
 export KEY_ROOT=/var/www/miq/vmdb/certs
 
-export APPLIANCE_REPO_DIRECTORY=/opt/manageiq/manageiq-appliance
-export APPLIANCE_TEMPLATE_DIRECTORY=${APPLIANCE_REPO_DIRECTORY}/TEMPLATE
+export APPLIANCE_SOURCE_DIRECTORY=/opt/manageiq/manageiq-appliance
+export APPLIANCE_TEMPLATE_DIRECTORY=${APPLIANCE_SOURCE_DIRECTORY}/TEMPLATE
 
 [[ -s /etc/default/evm_bundler ]] && source /etc/default/evm_bundler
 [[ -s /etc/default/evm_postgres ]] && source /etc/default/evm_postgres

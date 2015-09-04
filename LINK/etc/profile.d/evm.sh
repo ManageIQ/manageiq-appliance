@@ -2,4 +2,4 @@
 
 # Aliases:
 alias vmdb='cd /var/www/miq/vmdb'
-alias appliance='[[ -n ${APPLIANCE_REPO_DIRECTORY} ]] && cd ${APPLIANCE_REPO_DIRECTORY}'
+alias appliance='[[ -n ${APPLIANCE_SOURCE_DIRECTORY} ]] && cd ${APPLIANCE_SOURCE_DIRECTORY}'
