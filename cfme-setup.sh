@@ -29,6 +29,10 @@ EOF
 [[ -s /etc/cloud/cloud.cfg.d/05_logging.cfg ]] && sed -i "s/handlers=consoleHandler,cloudLogHandler/handlers=cloudLogHandler/g" /etc/cloud/cloud.cfg.d/05_logging.cfg
 [[ -s /etc/cloud/cloud.cfg.d/05_logging.cfg ]] && sed -i "/^ - \[ \*log_base, \*log_syslog \]/d" /etc/cloud/cloud.cfg.d/05_logging.cfg
 [[ -s /etc/cloud/cloud.cfg.d/05_logging.cfg ]] && sed -i "s/^output:.*$/output: {all: '| tee -a \/var\/log\/cloud-init-output\.log \&> \/dev\/null'}/g" /etc/cloud/cloud.cfg.d/05_logging.cfg
+[[ -s /usr/lib/systemd/system/cloud-config.service ]] && sed -i "s/^StandardOutput=.*/StandardOutput=journal/g" /usr/lib/systemd/system/cloud-config.service
+[[ -s /usr/lib/systemd/system/cloud-final.service ]] && sed -i "s/^StandardOutput=.*/StandardOutput=journal/g" /usr/lib/systemd/system/cloud-final.service
+[[ -s /usr/lib/systemd/system/cloud-init-local.service ]] && sed -i "s/^StandardOutput=.*/StandardOutput=journal/g" /usr/lib/systemd/system/cloud-init-local.service
+[[ -s /usr/lib/systemd/system/cloud-init.service ]] && sed -i "s/^StandardOutput=.*/StandardOutput=journal/g" /usr/lib/systemd/system/cloud-init.service
 
 /usr/sbin/semanage fcontext -a -t httpd_log_t "/var/www/miq/vmdb/log(/.*)?"
 /usr/sbin/semanage fcontext -a -t cert_t "/var/www/miq/vmdb/certs(/.*)?"
