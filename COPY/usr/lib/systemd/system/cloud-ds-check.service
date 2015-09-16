@@ -1,0 +1,13 @@
+[Unit]
+Description=check for which cloud-init datasources should be used
+Before=cloud-init.service
+After=local-fs.target network.target
+Requires=network.target
+Wants=cloud-init.service
+
+[Service]
+Type=oneshot
+ExecStart=/bin/cloud_ds_check.sh
+
+[Install]
+WantedBy=multi-user.target
