@@ -21,10 +21,6 @@ cat <<'EOF' > /etc/httpd/conf.d/ssl.conf
 # upgraded.
 EOF
 
-# Alter cloud-init config to allow root ssh access to the appliance
-[[ -s /etc/cloud/cloud.cfg ]] && sed -i "s/^ssh_pwauth:.*$/ssh_pwauth: True/g" /etc/cloud/cloud.cfg
-[[ -s /etc/cloud/cloud.cfg ]] && sed -i "s/^disable_root:.*$/disable_root: false/g" /etc/cloud/cloud.cfg
-
 # Alter cloud-init logging config to prevent logging to the console
 [[ -s /etc/cloud/cloud.cfg.d/05_logging.cfg ]] && sed -i "s/handlers=consoleHandler,cloudLogHandler/handlers=cloudLogHandler/g" /etc/cloud/cloud.cfg.d/05_logging.cfg
 [[ -s /etc/cloud/cloud.cfg.d/05_logging.cfg ]] && sed -i "/^ - \[ \*log_base, \*log_syslog \]/d" /etc/cloud/cloud.cfg.d/05_logging.cfg
