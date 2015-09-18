@@ -2,9 +2,15 @@
 [[ -s /etc/default/evm ]] && source /etc/default/evm
 
 pushd /var/www/miq/vmdb
-  # rails compile tasks loads environment which needs above shared objects
-  # There is no database.yml. Bogus database parameters appeases rails.
   RAILS_ENV=production rake evm:compile_assets
+popd
+
+# Self Service UI
+pushd /var/www/miq/vmdb/spa_ui/self_service
+  npm install gulp bower -g
+  npm install
+  bower install
+  gulp build
 popd
 
 # httpd needs to connect to backend workers on :3000 and :4000
