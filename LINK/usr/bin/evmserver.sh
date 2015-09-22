@@ -13,7 +13,7 @@ cd $BASEDIR
 # Load default environment and variables
 [[ -s "/etc/default/evm" ]] && source "/etc/default/evm"
 
-[[ -x "/var/www/miq/system/initialize_appliance.sh" ]] && /var/www/miq/system/initialize_appliance.sh
+[[ -x "${APPLIANCE_SOURCE_DIRECTORY}/initialize_appliance.sh" ]] && ${APPLIANCE_SOURCE_DIRECTORY}/initialize_appliance.sh
 
 start() {
   $RAKE evm:start
