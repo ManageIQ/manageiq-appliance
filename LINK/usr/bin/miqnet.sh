@@ -20,7 +20,6 @@ USAGETEXT="USAGE:\n \
  miqnet.sh -SEARCHORDER domain1.com[;domain2.com]...\n \
  miqnet.sh -HOST hostname\n \
  miqnet.sh -TIMESERVER timeserver\n \
- miqnet.sh -RESTART\n \
  miqnet.sh -TIME date time\n \
  miqnet.sh -TIMEZONE area city\n"
 
@@ -445,79 +444,6 @@ set_redhat_dhcp() {
   rm /etc/hosts.bak
 }
 
-check_rc() {
-  rc=$?
-  if [ $rc -ne 0 ]; then
-    log "$1: Failed due to error: $(cat $ERR_FILE)"
-  fi
-  return $rc
-}
-
-stop_vmdb() {
-  LOG_LINE='[----] I, ['`date -u`']  EVM SERVER STOP initiated by MIQ Console.' && echo $LOG_LINE >> $EVMLOG
-  log "EVM SERVER STOP initiated by MIQ Console."
-  systemctl stop  evmserverd >> $LOG_FILE 2>> $ERR_FILE
-  check_rc "stop_vmdb"
-  rc=$?
-
-  if [ $rc -ne 0 ]; then
-    return $rc
-  fi
-
-  sleep $VMDB_STOP_TIMER
-
-  close_pid_fd $PIDFILE
-  check_rc "close_pid_fd"
-  return $?
-}
-
-close_pid_fd() {
-  pid_file=$1
-  if [ -f $pid_file ]; then
-    pid=`cat $pid_file`
-    log "close_pid_fd: closing open fd for pid: $pid"
-    if [ -d "/proc/$pid/fd" ]; then
-      # close all open file descriptors
-      for FD in /proc/$pid/fd/*
-      do
-        FD=`basename $FD`
-
-        if [ $FD -le 1 ]
-        then
-          continue
-        fi
-
-        log "close_pid_fd: Closing FD: $FD"
-
-        eval "exec ${FD}>&-"
-        eval "exec ${FD}<&-"
-      done
-      log "close_pid_fd: Open FDs"
-      log "close_pid_fd: `lsof -p $pid`"
-
-      while [ -f $pid_file ]
-      do
-        log "close_pid_fd: Sleeping for 5 seconds due to existance of: $pid_file"
-        sleep 5
-      done
-      log "close_pid_fd: Safe to continue since $pid_file no longer exists"
-    fi
-  fi
-}
-
-start_vmdb(){
-  LOG_LINE='[----] I, ['`date -u`']  EVM SERVER START initiated by MIQ Console.' && echo $LOG_LINE >> $EVMLOG
-  log "EVM SERVER START initiated by MIQ Console."
-  systemctl start evmserverd >> $LOG_FILE 2>> $ERR_FILE
-  check_rc "start_vmdb"
-}
-
-restart_vmdb() {
-  LOG_LINE='[----] I, ['`date -u`']  EVM SERVER RESTART initiated by MIQ Console.' && echo $LOG_LINE >> $EVMLOG && echo $LOG_LINE >> $LOG_FILE
-  stop_vmdb
-  start_vmdb
-}
-
 case $1 in
   -GET | -get)
     shift
@@ -538,20 +464,9 @@ case $1 in
     shift
     set_timeserver "$@"
     ;;
-  -RESTART | -restart)
-    restart_vmdb
-    ;;
   -SEARCHORDER | -searchorder)
     shift
     set_search_order "$@"
-    ;;
-  -START | -start)
-    shift
-    start_vmdb
-    ;;
-  -STOP | -stop)
-    shift
-    stop_vmdb
     ;;
   -TIME | -time)
     shift
