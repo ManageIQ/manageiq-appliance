@@ -10,9 +10,6 @@ export PIDFILE="$RAILS_ROOT/tmp/pids/evm.pid"
 export EVMLOG="$LOG_DIR/evm.log"
 export DISTRO="redhat"
 
-# How many seconds should we wait for the various daemons to stop?
-export VMDB_STOP_TIMER=15
-
 USAGETEXT="USAGE:\n \
  miqnet.sh -GET [HOST | TIMESERVER | MAC | IP | MASK | GW | DNS1 | DNS2 | SEARCHORDER | TIMEZONE]\n \
  miqnet.sh -DHCP\n \
