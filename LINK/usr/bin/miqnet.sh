@@ -4,19 +4,13 @@ export ERR_FILE="/etc/init.d/miqnet.err"
 export TMP_IO="/tmp/tmp_io"
 export LOG_DIR="/var/www/miq/vmdb/log"
 export LOG_FILE="$LOG_DIR/appliance_console.log"
-export BACKUP_DIR="/var/www/miq/vmdb/config"
-export RAILS_ROOT="/var/www/miq/vmdb"
-export PIDFILE="$RAILS_ROOT/tmp/pids/evm.pid"
-export EVMLOG="$LOG_DIR/evm.log"
 export DISTRO="redhat"
 
 USAGETEXT="USAGE:\n \
- miqnet.sh -GET [MAC | IP | MASK | GW | DNS1 | DNS2 | SEARCHORDER | TIMEZONE]\n \
+ miqnet.sh -GET [MAC | IP | MASK | GW | DNS1 | DNS2 | SEARCHORDER]\n \
  miqnet.sh -DHCP\n \
  miqnet.sh -STATIC ipaddress netmask gateway primarydns [secondarydns]\n \
- miqnet.sh -SEARCHORDER domain1.com[;domain2.com]...\n \
- miqnet.sh -TIME date time\n \
- miqnet.sh -TIMEZONE area city\n"
+ miqnet.sh -SEARCHORDER domain1.com[;domain2.com]...\n" 
 
 log() {
   echo "$(date) $(date +%z): $@" >> $LOG_FILE
@@ -89,10 +83,6 @@ get_search_order () {
   cat /etc/resolv.conf 2> /dev/null | awk '/^search/ { print substr($0,8,length($0)-7) }'
 }
 
-get_timezone () {
-  timedatectl status | awk '/Timezone/ {print $2}'
-}
-
 get_info () {
   case $1 in
     MAC | mac) get_mac;;
@@ -102,7 +92,6 @@ get_info () {
     DNS1 | dns1) get_dns1;;
     DNS2 | dns2) get_dns2;;
     SEARCHORDER | searchorder) get_search_order;;
-    TIMEZONE | timezone) get_timezone;;
     *)
       if [ ! -z $1 ]; then
         echo -e $USAGETEXT >&2
@@ -111,28 +100,6 @@ get_info () {
       echo `get_mac` `get_ip` `get_netmask` `get_gateway` `get_dns1` `get_dns2`
       ;;
   esac
-}
-
-set_time() {
-  log "set_time: args: $@"
-
-  if [ $# -ne 2 ]; then
-    echo -e $USAGETEXT >&2
-    exit 1
-  fi
-
-  timedatectl set-time "${1} ${2}" --adjust-system-clock
-}
-
-set_timezone() {
-  log "set_timezone: args: $@"
-
-  if [ $# -ne 2 ]; then
-    echo -e $USAGETEXT >&2
-    exit 1
-  fi
-
-  timedatectl set-timezone "${1}/${2}"
 }
 
 set_static () {
@@ -406,14 +373,6 @@ case $1 in
   -SEARCHORDER | -searchorder)
     shift
     set_search_order "$@"
-    ;;
-  -TIME | -time)
-    shift
-    set_time "$@"
-    ;;
-  -TIMEZONE | -timezone)
-    shift
-    set_timezone "$@"
     ;;
   *)
     echo -e $USAGETEXT >&2
