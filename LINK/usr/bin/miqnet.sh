@@ -21,9 +21,6 @@ USAGETEXT="USAGE:\n \
  miqnet.sh -HOST hostname\n \
  miqnet.sh -TIMESERVER timeserver\n \
  miqnet.sh -RESTART\n \
- miqnet.sh -RESTARTOS\n \
- miqnet.sh -RESTARTOSRMLOGS\n \
- miqnet.sh -SHUTDOWN\n \
  miqnet.sh -TIME date time\n \
  miqnet.sh -TIMEZONE area city\n"
 
@@ -176,30 +173,6 @@ set_hostname() {
   systemctl restart network > /dev/null 2>> $ERR_FILE
 
   log "set_hostname: new hostname: $(hostname)"
-}
-
-restart_os() {
-  LOG_LINE='[----] I, ['`date -u`']  APPLIANCE RESTART initiated by MIQ Console.' && echo $LOG_LINE >> $EVMLOG && echo $LOG_LINE >> $LOG_FILE
-  stop_vmdb
-  shutdown -r now
-}
-
-restart_os_rm_logs() {
-  LOG_LINE='[----] I, ['`date -u`']  APPLIANCE RESTART WITH CLEAN LOGS initiated by MIQ Console.' && echo $LOG_LINE >> $EVMLOG && echo $LOG_LINE >> $LOG_FILE
-  stop_vmdb
-  stop_miqtop
-  stop_miqvmstat
-  stop_httpd
-  rm -rf /var/www/miq/vmdb/log/*.log*
-  rm -rf /var/www/miq/vmdb/log/apache/*.log*
-  LOG_LINE='[----] I, ['`date -u`']  LOGS CLEANED AND APPLIANCE REBOOTED by MIQ Console.' && echo $LOG_LINE >> $EVMLOG && echo $LOG_LINE >> $LOG_FILE
-  shutdown -r now
-}
-
-shutdown_os() {
-  LOG_LINE='[----] I, ['`date -u`']  APPLIANCE SHUTDOWN initiated by MIQ Console.' && echo $LOG_LINE >> $EVMLOG && echo $LOG_LINE >> $LOG_FILE
-  stop_vmdb
-  shutdown -h 0
 }
 
 set_timeserver() {
@@ -480,18 +453,6 @@ check_rc() {
   return $rc
 }
 
-stop_miqtop() {
-  systemctl stop miqtop
-}
-
-stop_miqvmstat() {
-  systemctl stop miqvmstat
-}
-
-stop_httpd() {
-  systemctl stop httpd > /dev/null 2>> $ERR_FILE
-}
-
 stop_vmdb() {
   LOG_LINE='[----] I, ['`date -u`']  EVM SERVER STOP initiated by MIQ Console.' && echo $LOG_LINE >> $EVMLOG
   log "EVM SERVER STOP initiated by MIQ Console."
@@ -580,12 +541,6 @@ case $1 in
   -RESTART | -restart)
     restart_vmdb
     ;;
-  -RESTARTOS | -restartos)
-    restart_os
-    ;;
-  -RESTARTOSRMLOGS | -restartosrmlogs)
-    restart_os_rm_logs
-    ;;
   -SEARCHORDER | -searchorder)
     shift
     set_search_order "$@"
@@ -597,9 +552,6 @@ case $1 in
   -STOP | -stop)
     shift
     stop_vmdb
-    ;;
-  -SHUTDOWN | -shutdown)
-    shutdown_os
     ;;
   -TIME | -time)
     shift
