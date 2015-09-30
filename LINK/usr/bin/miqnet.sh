@@ -11,12 +11,11 @@ export EVMLOG="$LOG_DIR/evm.log"
 export DISTRO="redhat"
 
 USAGETEXT="USAGE:\n \
- miqnet.sh -GET [HOST | TIMESERVER | MAC | IP | MASK | GW | DNS1 | DNS2 | SEARCHORDER | TIMEZONE]\n \
+ miqnet.sh -GET [HOST | MAC | IP | MASK | GW | DNS1 | DNS2 | SEARCHORDER | TIMEZONE]\n \
  miqnet.sh -DHCP\n \
  miqnet.sh -STATIC ipaddress netmask gateway primarydns [secondarydns]\n \
  miqnet.sh -SEARCHORDER domain1.com[;domain2.com]...\n \
  miqnet.sh -HOST hostname\n \
- miqnet.sh -TIMESERVER timeserver\n \
  miqnet.sh -TIME date time\n \
  miqnet.sh -TIMEZONE area city\n"
 
@@ -31,10 +30,6 @@ safe_mv () {
 
 get_hostname () {
   hostname
-}
-
-get_timeserver () {
-  awk '/^server/ { print $2}' /etc/chrony.conf
 }
 
 get_mac () {
@@ -113,7 +108,6 @@ get_info () {
     DNS1 | dns1) get_dns1;;
     DNS2 | dns2) get_dns2;;
     SEARCHORDER | searchorder) get_search_order;;
-    TIMESERVER | timeserver) get_timeserver;;
     TIMEZONE | timezone) get_timezone;;
     *)
       if [ ! -z $1 ]; then
@@ -169,20 +163,6 @@ set_hostname() {
   systemctl restart network > /dev/null 2>> $ERR_FILE
 
   log "set_hostname: new hostname: $(hostname)"
-}
-
-set_timeserver() {
-  if [ -z $1 ]; then
-      echo -e $USAGETEXT >&2
-      exit 1
-  fi
-
-  if [ $(grep -c $1 /etc/chrony.conf) -ne 0 ]; then
-      echo "miqnet.sh: server $1 already registered in /etc/chrony.conf"
-      exit 1
-  else
-      echo -e "\n# Added by miqnet.sh\nserver $1" >> /etc/chrony.conf
-  fi
 }
 
 set_static () {
@@ -456,10 +436,6 @@ case $1 in
   -HOST | -host)
     shift
     set_hostname "$@"
-    ;;
-  -TIMESERVER | -timeserver)
-    shift
-    set_timeserver "$@"
     ;;
   -SEARCHORDER | -searchorder)
     shift
