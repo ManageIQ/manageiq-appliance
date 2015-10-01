@@ -9,7 +9,7 @@ popd
 pushd /var/www/miq/vmdb/spa_ui/self_service
   npm install gulp bower -g
   npm install
-  bower install
+  bower --allow-root install
   gulp build
 popd
 
