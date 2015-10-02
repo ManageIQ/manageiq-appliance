@@ -16,6 +16,9 @@ popd
 # httpd needs to connect to backend workers on :3000 and :4000
 setsebool -P httpd_can_network_connect on
 
+# apply SELinux policies needed by the appliance
+[[ -x /usr/bin/miqselinux.sh ]] && /usr/bin/miqselinux.sh
+
 # backup the default ssl.conf
 mv /etc/httpd/conf.d/ssl.conf{,.orig}
 
