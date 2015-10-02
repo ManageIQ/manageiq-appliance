@@ -7,7 +7,7 @@ export LOG_FILE="$LOG_DIR/appliance_console.log"
 export DISTRO="redhat"
 
 USAGETEXT="USAGE:\n \
- miqnet.sh -GET [MAC | IP | MASK | GW | DNS1 | DNS2 | SEARCHORDER]\n \
+ miqnet.sh -GET [IP | DNS1 | DNS2 | SEARCHORDER]\n \
  miqnet.sh -DHCP\n \
  miqnet.sh -STATIC ipaddress netmask gateway primarydns [secondarydns]\n \
  miqnet.sh -SEARCHORDER domain1.com[;domain2.com]...\n" 
@@ -19,13 +19,6 @@ log() {
 safe_mv () {
   mv $1 $2
   restorecon $2
-}
-
-get_mac () {
-  ###
-  ## TODO: Remove hard coded eth0
-  ###
-  ip addr show eth0 | awk '/ether/ { print $2 }'
 }
 
 get_ip () {
@@ -53,14 +46,6 @@ get_ip () {
   done
 }
 
-get_netmask () {
-  ifconfig eth0 | awk '/netmask/ { print $4 }' | cut -d: -f2
-}
-
-get_gateway () {
-  ip route | awk '/^default/ { print $3 }'
-}
-
 get_dns1 () {
   # Redirect any stderr 'cat: /etc/resolv.conf: No such file or directory'  messages to /dev/null
   cat /etc/resolv.conf 2> /dev/null | awk '/^nameserver/ { print $2; exit }'
@@ -85,10 +70,7 @@ get_search_order () {
 
 get_info () {
   case $1 in
-    MAC | mac) get_mac;;
     IP | ip) get_ip;;
-    MASK | mask) get_netmask;;
-    GW | gw) get_gateway;;
     DNS1 | dns1) get_dns1;;
     DNS2 | dns2) get_dns2;;
     SEARCHORDER | searchorder) get_search_order;;
@@ -97,7 +79,7 @@ get_info () {
         echo -e $USAGETEXT >&2
         exit 1
       fi
-      echo `get_mac` `get_ip` `get_netmask` `get_gateway` `get_dns1` `get_dns2`
+      echo `get_ip` `get_dns1` `get_dns2`
       ;;
   esac
 }
