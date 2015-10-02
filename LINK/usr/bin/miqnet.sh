@@ -11,11 +11,10 @@ export EVMLOG="$LOG_DIR/evm.log"
 export DISTRO="redhat"
 
 USAGETEXT="USAGE:\n \
- miqnet.sh -GET [HOST | MAC | IP | MASK | GW | DNS1 | DNS2 | SEARCHORDER | TIMEZONE]\n \
+ miqnet.sh -GET [MAC | IP | MASK | GW | DNS1 | DNS2 | SEARCHORDER | TIMEZONE]\n \
  miqnet.sh -DHCP\n \
  miqnet.sh -STATIC ipaddress netmask gateway primarydns [secondarydns]\n \
  miqnet.sh -SEARCHORDER domain1.com[;domain2.com]...\n \
- miqnet.sh -HOST hostname\n \
  miqnet.sh -TIME date time\n \
  miqnet.sh -TIMEZONE area city\n"
 
@@ -26,10 +25,6 @@ log() {
 safe_mv () {
   mv $1 $2
   restorecon $2
-}
-
-get_hostname () {
-  hostname
 }
 
 get_mac () {
@@ -100,7 +95,6 @@ get_timezone () {
 
 get_info () {
   case $1 in
-    HOST | host) get_hostname;;
     MAC | mac) get_mac;;
     IP | ip) get_ip;;
     MASK | mask) get_netmask;;
@@ -114,7 +108,7 @@ get_info () {
         echo -e $USAGETEXT >&2
         exit 1
       fi
-      echo `get_hostname` `get_mac` `get_ip` `get_netmask` `get_gateway` `get_dns1` `get_dns2`
+      echo `get_mac` `get_ip` `get_netmask` `get_gateway` `get_dns1` `get_dns2`
       ;;
   esac
 }
@@ -139,30 +133,6 @@ set_timezone() {
   fi
 
   timedatectl set-timezone "${1}/${2}"
-}
-
-set_hostname() {
-  if [ -z ${1} ]; then
-    echo -e ${USAGETEXT} >&2
-    exit 1
-  fi
-
-  log "set_hostname: old hostname: $(hostname)"
-
-  hostnamectl set-hostname ${1}
-
-  # Update or add the hostname to the associated ip address
-  grep -E "^${IP_ADDR}" /etc/hosts > /dev/null
-  if [ $? -eq 0 ]; then
-    sed "s/\(^${IP_ADDR}\>\s*\)\(.*\<.*$\)/\1${1}/" /etc/hosts > /etc/hosts.new
-    safe_mv /etc/hosts.new /etc/hosts
-  else
-    echo -e "${IP_ADDR}\t\t${1}" >> /etc/hosts
-  fi
-
-  systemctl restart network > /dev/null 2>> $ERR_FILE
-
-  log "set_hostname: new hostname: $(hostname)"
 }
 
 set_static () {
@@ -285,7 +255,7 @@ GATEWAY=${3}" >> ${network}.tmp
 
   log "set_redhat_static: hosts old: $(cat /etc/hosts)"
   # Update the ipaddress associated with our hostname
-  hn=$(get_hostname)
+  hn=`hostname`
   grep -E "^$old_ip" /etc/hosts > /dev/null
   if [ $? -eq 0 ]; then
     # Change the ip associated with the hostname to the new ip
@@ -404,7 +374,7 @@ set_redhat_dhcp() {
 
   new_ip=$(get_ip)
   # Update the ipaddress associated with our hostname
-  hn=$(get_hostname)
+  hn=`hostname`
 
   log "set_redhat_dhcp: hosts old: $(cat /etc/hosts)"
   grep -E "^$old_ip" /etc/hosts > /dev/null
@@ -432,10 +402,6 @@ case $1 in
   -STATIC | -static)
     shift
     set_static "$@"
-    ;;
-  -HOST | -host)
-    shift
-    set_hostname "$@"
     ;;
   -SEARCHORDER | -searchorder)
     shift
