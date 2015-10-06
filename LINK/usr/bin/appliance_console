@@ -4,4 +4,4 @@
 
 [[ -s /etc/default/evm ]] && source /etc/default/evm
 
-ruby /var/www/miq/lib/appliance_console.rb $@
+ruby /var/www/miq/vmdb/gems/pending/appliance_console.rb $@
