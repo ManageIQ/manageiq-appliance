@@ -4,13 +4,13 @@
 
 LOG_DIR=/var/www/miq/vmdb/log
 
-for CMD in top vmstat
+for CMD in "top" "vmstat"
 do
-	LOG_FILE=${LOG_DIR}/${CMD}
+	LOG_FILE="${LOG_DIR}/${CMD}_output.log"
 
 	if [ -e ${LOG_FILE} ]
 	then
-		echo "miqtop: timesync: date time is-> $(date) $(date +%z)" >> ${LOG_FILE}
+		echo -e "\ntimesync: date time is-> $(date) $(date +%z)" >> ${LOG_FILE}
 	fi
 done
 
