@@ -2,8 +2,7 @@
 # description: ManageIQ watchdog application loop
 #
 
-require '/var/www/miq/lib/util/system/evm_watchdog'
-
+require '/var/www/miq/vmdb/gems/pending/util/system/evm_watchdog'
 
 EvmWatchdog.kill_other_watchdogs # To prevent duplicates.
 sleep(600) # 600s = 10 minute startup delay.
