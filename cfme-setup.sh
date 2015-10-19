@@ -3,6 +3,7 @@
 
 pushd /var/www/miq/vmdb
   RAILS_ENV=production rake evm:compile_assets
+  rake evm:compile_sti_loader
 popd
 
 # Self Service UI
