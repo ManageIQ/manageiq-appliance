@@ -1,0 +1,24 @@
+# Configure the ruby 2.1+ garbage collector with initial values
+# based on research found here: http://tmm1.net/ruby21-rgengc/
+#
+# Without tuning, we GC 42 times (minor or major) just loading the rails environment
+# with roughly 460,000 live slots after a full GC.
+# bundle exec rails r "GC.start; puts GC.stat.values_at(:count, :heap_live_slots)"
+#   42
+#   461247
+#
+# After exporting these values:
+# bundle exec rails r "GC.start; puts GC.stat.values_at(:count, :heap_live_slots)"
+#   17
+#   461103
+#
+# Note, unlike the blog post above, we don't change RUBY_GC_HEAP_FREE_SLOTS from
+# the default of 4096 because we want the GC to run when we're actively
+# allocating objects.
+#
+# The general rationale is to initialize the heap with the minimum number of slots
+# we'll know we need, 600,000, grow the heap much slower (1.25x vs. 1.8x), and
+# allow it to grow the heap by at most 300,000 slots (vs. no limit).
+export RUBY_GC_HEAP_GROWTH_MAX_SLOTS=300000 # default: no limit
+export RUBY_GC_HEAP_INIT_SLOTS=600000 # default: 10000
+export RUBY_GC_HEAP_GROWTH_FACTOR=1.25 # default 1.8
