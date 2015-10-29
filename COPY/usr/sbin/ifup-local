@@ -1,8 +1,8 @@
 #!/bin/bash
 
-# bail unless ($1 = eth0 && $2 = up) || ($1 = eth0 && $2 = hostname)
+# bail unless ($1 = eth0)
 # dont call exit
-if [ "$1" != "eth0" -o "$2" != "up" -a "$2" != "hostname" ] ; then
+if [ "$1" != "eth0" ] ; then
   :
 else
   # After a network interface is loaded
