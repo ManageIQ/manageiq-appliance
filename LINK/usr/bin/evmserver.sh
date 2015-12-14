@@ -1,13 +1,8 @@
 #!/bin/bash
-# chkconfig: 2345 99 15
-# description: evmserverd starts the EVM Server daemon
-#
 
 PATH=/sbin:/bin:/usr/sbin:/usr/bin:/usr/local:/usr/local/sbin:/usr/local/bin
 BASEDIR="/var/www/miq/vmdb"
 RETVAL=0
-RUNNER="${BASEDIR}/script/rails runner"
-RAKE="${RUNNER} ${BASEDIR}/script/rake"
 cd $BASEDIR
 
 # Load default environment and variables
@@ -16,43 +11,43 @@ cd $BASEDIR
 [[ -x "${APPLIANCE_SOURCE_DIRECTORY}/initialize_appliance.sh" ]] && ${APPLIANCE_SOURCE_DIRECTORY}/initialize_appliance.sh
 
 start() {
-  $RAKE evm:start
+  rake evm:start
   RETVAL=$?
   return $RETVAL
 }
 
 stop() {
-  $RAKE evm:stop
+  rake evm:stop
   RETVAL=$?
   return $RETVAL
 }
 
 kill() {
-  $RAKE evm:kill
+  rake evm:kill
   RETVAL=$?
   return $RETVAL
 }
 
 restart() {
-  $RAKE evm:restart
+  rake evm:restart
   RETVAL=$?
   return $RETVAL
 }
 
 status() {
-  $RAKE evm:status
+  rake evm:status
   RETVAL=$?
   return $RETVAL
 }
 
 update_start() {
-  $RAKE evm:update_start >> /var/www/miq/vmdb/log/evm.log 2>&1
+  rake evm:update_start >> /var/www/miq/vmdb/log/evm.log 2>&1
   RETVAL=$?
   return $RETVAL
 }
 
 update_stop() {
-  $RAKE evm:update_stop >> /var/www/miq/vmdb/log/evm.log 2>&1
+  rake evm:update_stop >> /var/www/miq/vmdb/log/evm.log 2>&1
   RETVAL=$?
   return $RETVAL
 }
