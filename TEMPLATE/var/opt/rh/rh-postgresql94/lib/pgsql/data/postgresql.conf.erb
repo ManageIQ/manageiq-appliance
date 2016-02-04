@@ -132,7 +132,7 @@ shared_buffers = 128MB			# MIQ Value SHARED CONFIGURATION
 
 #max_files_per_process = 1000		# min 25
 					# (change requires restart)
-#shared_preload_libraries = ''		# (change requires restart)
+shared_preload_libraries = 'pglogical'		# MIQ Value (change requires restart)
 
 # - Cost-Based Vacuum Delay -
 
@@ -159,7 +159,7 @@ shared_buffers = 128MB			# MIQ Value SHARED CONFIGURATION
 
 # - Settings -
 
-#wal_level = minimal			# minimal, archive, or hot_standby
+wal_level = 'logical' # MIQ Value (pglogical)
 					# (change requires restart)
 #fsync = on				# turns forced synchronization on or off
 #synchronous_commit = on		# synchronization level; on, off, or local
@@ -205,7 +205,7 @@ checkpoint_completion_target = 0.9	# MIQ Value;
 
 # These settings are ignored on a standby server
 
-#max_wal_senders = 0		# max number of walsender processes
+max_wal_senders = 10		# MIQ Value (pglogical) max number of walsender processes
 				# (change requires restart)
 #wal_sender_delay = 1s		# walsender cycle time, 1-10000 milliseconds
 #wal_keep_segments = 0		# in logfile segments, 16MB each; 0 disables
@@ -585,3 +585,5 @@ standard_conforming_strings = off	# MIQ Value not sure why this is enabled
 #------------------------------------------------------------------------------
 
 #custom_variable_classes = ''		# list of custom variable class names
+max_worker_processes = 10  # MIQ Value (pglogical)
+max_replication_slots = 10 # MIQ Value (pglogical)
