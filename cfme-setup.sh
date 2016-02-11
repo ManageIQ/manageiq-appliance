@@ -7,7 +7,7 @@ pushd /var/www/miq/vmdb
 popd
 
 # Self Service UI
-pushd /var/www/miq/vmdb/spa_ui/self_service
+pushd /opt/manageiq/manageiq-ui-self_service
   npm install gulp bower -g
   npm install
   bower --allow-root install
