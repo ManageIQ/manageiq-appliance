@@ -10,7 +10,7 @@ popd
 pushd /opt/manageiq/manageiq-ui-self_service
   npm install gulp bower -g
   npm install
-  bower --allow-root install
+  bower -F --allow-root install
   gulp build
 popd
 
