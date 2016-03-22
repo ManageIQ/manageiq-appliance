@@ -12,7 +12,7 @@ mv /etc/httpd/conf.d/ssl.conf{,.orig}
 
 # https://bugzilla.redhat.com/show_bug.cgi?id=1020042
 cat <<'EOF' > /etc/httpd/conf.d/ssl.conf
-# This file intentionally left blank.  CFME maintains its own SSL
+# This file intentionally left blank. ManageIQ maintains its own SSL
 # configuration.  The presence of this file prevents the version
 # supplied by mod_ssl from being installed when the mod_ssl package is
 # upgraded.
