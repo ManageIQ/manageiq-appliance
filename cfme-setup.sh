@@ -1,14 +1,17 @@
 #!/bin/bash
 [[ -s /etc/default/evm ]] && source /etc/default/evm
 
+npm install gulp bower -g
+
 pushd /var/www/miq/vmdb
+  bower -F --allow-root install
+
   RAILS_ENV=production rake evm:compile_assets
   rake evm:compile_sti_loader
 popd
 
 # Self Service UI
 pushd /opt/manageiq/manageiq-ui-self_service
-  npm install gulp bower -g
   npm install
   bower -F --allow-root install
   gulp build
