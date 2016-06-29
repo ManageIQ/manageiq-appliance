@@ -219,7 +219,7 @@ max_wal_senders = 10		# MIQ Value (pglogical) max number of walsender processes
 
 # These settings are ignored on a master server
 
-#hot_standby = off			# "on" allows queries during recovery
+hot_standby = on			# "on" allows queries during recovery
 					# (change requires restart)
 #max_standby_archive_delay = 30s	# max delay before canceling queries
 					# when reading WAL from archive;
