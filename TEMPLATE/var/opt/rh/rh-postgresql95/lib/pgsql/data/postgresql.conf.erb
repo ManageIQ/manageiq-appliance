@@ -181,8 +181,8 @@ wal_buffers = 16MB			# MIQ Value;
 
 # - Checkpoints -
 
-checkpoint_segments = 15		# MIQ Value;
-#checkpoint_segments = 3		# in logfile segments, min 1, 16MB each
+#max_wal_size = 1GB
+#min_wal_size = 80MB
 #checkpoint_timeout = 5min		# range 30s-1h
 checkpoint_completion_target = 0.9	# MIQ Value;
 #checkpoint_completion_target = 0.5	# checkpoint target duration, 0.0 - 1.0
