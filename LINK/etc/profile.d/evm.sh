@@ -10,7 +10,7 @@ function tailmiq()
 {
   tail -f /var/www/miq/vmdb/log/$1.log
 }
-alias tailpglog='tail -f /var/opt/rh/rh-postgresql95/lib/pgsql/data/pg_log/postgresql.log'
+alias tailpglog='tail -f $APPLIANCE_PG_DATA/pg_log/postgresql.log'
 
 # Rails Console:
 alias railsc="cd /var/www/miq/vmdb;echo '\$evm = MiqAeMethodService::MiqAeService.new(MiqAeEngine::MiqAeWorkspaceRuntime.new)'; rails c"
