@@ -4,3 +4,11 @@
 alias ap='/usr/bin/appliance_console'
 alias vmdb='cd /var/www/miq/vmdb'
 alias appliance='[[ -n ${APPLIANCE_SOURCE_DIRECTORY} ]] && cd ${APPLIANCE_SOURCE_DIRECTORY}'
+# Tail miq logs
+alias tailauto='tail -f /var/www/miq/vmdb/log/automation.log'
+alias tailevm='tail -f /var/www/miq/vmdb/log/evm.log'
+alias tailprod='tail -f /var/www/miq/vmdb/log/production.log'
+alias tailpolicy='tail -f /var/www/miq/vmdb/log/policy.log'
+alias tailpglog='tail -f /var/opt/rh/rh-postgresql94/lib/pgsql/data/pg_log/postgresql.log'
+# Rails Console
+alias railsc="cd /var/www/miq/vmdb;echo '\$evm = MiqAeMethodService::MiqAeService.new(MiqAeEngine::MiqAeWorkspaceRuntime.new)'; rails c"
