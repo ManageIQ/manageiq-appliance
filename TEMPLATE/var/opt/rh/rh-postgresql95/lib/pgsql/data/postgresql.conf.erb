@@ -132,7 +132,7 @@ shared_buffers = 128MB			# MIQ Value SHARED CONFIGURATION
 
 #max_files_per_process = 1000		# min 25
 					# (change requires restart)
-shared_preload_libraries = 'pglogical'		# MIQ Value (change requires restart)
+shared_preload_libraries = 'pglogical,repmgr_funcs'		# MIQ Value (change requires restart)
 
 # - Cost-Based Vacuum Delay -
 
