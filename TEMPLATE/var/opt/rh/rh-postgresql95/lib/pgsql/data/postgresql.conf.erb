@@ -132,7 +132,7 @@ shared_buffers = 128MB			# MIQ Value SHARED CONFIGURATION
 
 #max_files_per_process = 1000		# min 25
 					# (change requires restart)
-shared_preload_libraries = 'pglogical'		# MIQ Value (change requires restart)
+shared_preload_libraries = 'pglogical,repmgr_funcs'		# MIQ Value (change requires restart)
 
 # - Cost-Based Vacuum Delay -
 
@@ -195,6 +195,7 @@ checkpoint_completion_target = 0.9	# MIQ Value;
 #archive_command = ''		# command to use to archive a logfile segment
 #archive_timeout = 0		# force a logfile segment switch after this
 				# number of seconds; 0 disables
+wal_log_hints = on
 
 
 #------------------------------------------------------------------------------
