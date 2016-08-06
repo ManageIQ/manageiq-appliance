@@ -8,7 +8,7 @@ alias appliance='[[ -n ${APPLIANCE_SOURCE_DIRECTORY} ]] && cd ${APPLIANCE_SOURCE
 # Tail MIQ Logs:
 function tailmiq()
 {
-  tail -f /var/www/miq/vmdb/log/$1.log
+  tail -f /var/www/miq/vmdb/log/${1:-evm}.log
 }
 alias tailpglog='tail -f $APPLIANCE_PG_DATA/pg_log/postgresql.log'
 
