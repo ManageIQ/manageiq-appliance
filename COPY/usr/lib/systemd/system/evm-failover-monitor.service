@@ -1,0 +1,10 @@
+[Unit]
+Description=PostgreSQL Failover Monitor for ManageIQ
+After=evmserverd.service
+
+[Service]
+ExecStart=/usr/bin/evm_failover_monitor
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target

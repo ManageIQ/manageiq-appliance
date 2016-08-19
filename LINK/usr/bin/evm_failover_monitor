@@ -1,0 +1,4 @@
+#!/bin/bash
+
+source /etc/default/evm
+ruby /bin/evm_failover_monitor.rb
