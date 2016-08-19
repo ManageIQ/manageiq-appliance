@@ -1,0 +1,10 @@
+#!/bin/bash
+
+source /etc/default/evm
+LOGFILE=/var/www/miq/vmdb/log/hourly_continuous_pg_maint_stdout.log
+TABLE_NAME=metrics_$(date -u +"%H" --date='+1 hours')
+
+echo "current time is $(date) -> target for REINDEX TABLE is '$TABLE_NAME' table" >> $LOGFILE
+psql -U postgres vmdb_production -a -e -c "REINDEX TABLE $TABLE_NAME" >> $LOGFILE 2>&1
+echo "REINDEX TABLE $TABLE_NAME completed at $(date)" >> $LOGFILE
+echo "=================" >> $LOGFILE
