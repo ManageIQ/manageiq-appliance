@@ -1,0 +1,97 @@
+# # # # # # # #
+# this script is intended to perform full vacuum of certain CFME tables periodically
+# caution needs to be used with full vacuum as each of these tables will become locked
+# for update until the full vacuum is completed. CFME replication may be adversly
+# impacted by the indiscriminant use of this or other such maintenance processes
+# which locks tables that replication may trying to update.  therefore, when this
+# process is initiated it is recommended that replication be suspended until this
+# maintenance process is completed, or that the user be prepared to restart and
+# possibly re-sync tables should replication become stalled while this process 
+# is active.  The verbose option of the vacuum has been added so that additional
+# information about record counts, removed tuples and total pages as well as 
+# execution time is captured into the output file for possible later review.
+#
+# the expected operational environment for this script is that it is executing
+# on the host/appliance where the CFME PostgreSQL VMDB is executing.  The command
+# initiation sequence does not contain either userid or host reference as it
+# is expected that the pg_hba.conf is configured to trust linux socket connections
+# and not require these.
+# 
+# a full vacuum for the ems_events table has been added to this which did 
+# exist in previous versions of this document as this is the table that is used
+# when UI timelines are being created and a reorganiztion of this table
+# periodically should allow that process to complete in a more timely manner.
+# by default this table is commented out (ie, is preceeded by two dashes '--')
+# 
+# Caution: PostgreSQL version 9.0 and later has changed the way that vacuum full
+#           operates.  In prior versions, there was no need to have additional
+#           space available in the file system to perform vacuum full operations.
+#           However, with version 9.0 the vacuum full operation copies the source
+#           table (ie the table being vacuumed) to a completely new table which 
+#           temporarily increases the required space in the filesystem where the 
+#           database exists.  After the copy and rebuild of the indexes is 
+#           completed the old tables and indexes are delete and the newly created
+#           ones renamed to the old names.
+#
+# this script is also altered to adapt to the requirements introduced in the
+# CFME 3.1 version which required the use of 'scl enable postgresql92 -- ' as a
+# command prefix due to the introduction of PostgreSQL as a software collection
+# not in the default search path.  It is possible that this command may need to
+# adapt in the future if a new version of PostgreSQL is introduced other than the
+# current PostgreSQL version 9.2 which this command references.
+#
+# Tom Hennessy July 16 2015 
+# # # # # # # #
+#
+# Tom Hennessy - 2014-01-08  Red Hat, Inc.
+# unlike the hourly re-index commands these are intended to run squentially
+# so that there is minimal impact to the operating environment (ie, filesystem) 
+# as it is expected that these operations will have a longer duration than
+# the hourly reindex transactions.
+#
+# any single vacuum can be removed by preceding the word "vacuum" with two dashes
+# eg "--vacuum full hosts" will prevent the vacuum from operating on the 'hosts'
+# table
+# 
+# 
+# path_to_psql="/usr/local/bin/psql"                         # Use this path for CFME 2.0
+#path_to_psql="/opt/rh/postgresql92/root/usr/bin/psql"         # Use this path for CFME 3.x 
+path_to_psql="psql"                                           # reduced just to the command when using scl enable
+#
+COMMON_OUTPUT='/var/www/miq/vmdb/log/periodic_continuous_pg_maint_stdout.log'
+#
+echo "current time is $(date) -> periodic vacuum full for selected CFME tables " >> $COMMON_OUTPUT
+#/usr/local/bin/psql  vmdb_production -c "REINDEX TABLE miq_servers "  >> $COMMON_OUTPUT 2>&1
+scl enable postgresql92 -- $path_to_psql  vmdb_production -a  << $$end >> $COMMON_OUTPUT 2>&1
+\timing
+VACUUM full verbose vms ;
+vacuum full verbose binary_blob_parts ;
+vacuum full verbose binary_blobs ;
+vacuum full verbose customization_specs ;
+vacuum full verbose firewall_rules   ;
+Vacuum full verbose hosts ;
+vacuum full verbose storages ;
+vacuum full verbose miq_schedules ;
+vacuum full verbose event_logs ;
+
+vacuum full verbose policy_events ;
+vacuum full verbose snapshots ;
+vacuum full verbose jobs ;
+vacuum full verbose networks ;
+vacuum full verbose miq_queue ;
+vacuum full verbose miq_request_tasks ;
+vacuum full verbose miq_workers;
+vacuum full verbose miq_servers;
+vacuum full verbose miq_searches;
+vacuum full verbose miq_scsi_luns ;
+vacuum full verbose miq_scsi_targets;
+vacuum full verbose storage_files ;
+vacuum full verbose taggings ;
+vacuum full verbose vim_performance_states;
+--vacuum full verbose ems_events ;
+
+
+$$end
+# the above '$$end' defines the end of the input to the command. DO NOT REMOVE IT!!!
+echo "periodic vacuum full  completed at $(date)" >> $COMMON_OUTPUT
+echo "=================" >> $COMMON_OUTPUT

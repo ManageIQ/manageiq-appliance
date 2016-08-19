@@ -1,0 +1,64 @@
+# # # # # # # #
+# this script is intended to reindex the miq_queue table hourly
+# # # # # # # #
+#
+# Tom Hennessy - 2015-12-11  Red Hat, Inc.
+#
+
+read tbuild < /var/www/miq/vmdb/BUILD
+echo "$tbuild"
+subset=${tbuild:0:3}
+echo "$subset"
+if [ $subset = "5.5" ]; then 
+     echo 'this is a CFME 40 environment'
+     else
+     echo 'this is not a CFME 40 environment'
+fi  
+
+case $subset in
+"5.3" ) 
+ message="5.3 release"
+
+ postgresql_path="/opt/rh/postgresql92/root/var/lib/pgsql/data"
+ ;;
+"5.4" )
+ message="5.4 release"
+ postgresql_collection=$(scl -l | grep postgresql)        # Identify name of collection with postgresql
+ postgresql_path="/opt/rh/postgresql92/root/var/lib/pgsql/data"
+ ;;
+"5.5" )
+ message="cloudforms 40 release"  
+ 
+# attempts to automate the finding of psql don't appear to work as a cron job, so hard coding path
+ 
+# echo " path to psql is $(whereis psql)"  >> /var/www/miq/vmdb/log/hourly_continuous_pg_maint_stdout.log
+# temp1=$(whereis psql)                                      #find where psql exec is located
+# path_to_psql=${temp1:6}                                    #use this path for CFME 40
+
+ postgresql_collection=$(scl -l | grep postgresql)        # Identify name of collection with postgresql                        
+
+  path_to_psql="/opt/rh/rh-postgresql94/root/usr/bin/psql"   #use this path for CFME 40 
+ ;;
+*)
+ message="unknown cloudforms release, script terminating"
+ echo "$message"
+ exit 1
+ ;;   
+esac
+
+
+# path_to_psql="/usr/local/bin/psql"                         # Use this path for CFME 2.0
+#path_to_psql="/opt/rh/postgresql92/root/usr/bin/psql"         # Use this path for CFME 3.x
+
+# path_to_psql="/opt/rh/rh-postgresql94/root/usr/bin/psql
+
+#postgresql_collection=$(scl -l | grep postgresql)
+#
+#
+echo "current time is $(date) -> target for reindex is 'miq_queue' table " >> /var/www/miq/vmdb/log/hourly_continuous_pg_maint_stdout.log
+#$path_to_sql -h localhost vmdb_production -c "REINDEX TABLE miq_queue "  >> /var/www/miq/vmdb/log/hourly_continuous_pg_maint_stdout.log 2>&1
+#scl enable postgresql92 -- $path_to_psql  vmdb_production -a -c "REINDEX TABLE miq_queue "  >> /var/www/miq/vmdb/log/hourly_continuous_pg_maint_stdout.log 2>&1
+echo "scl enable $postgresql_collection -- $path_to_psql  vmdb_production -a -e -c 'REINDEX TABLE miq_queue ' "  >> /var/www/miq/vmdb/log/hourly_continuous_pg_maint_stdout.log
+scl enable $postgresql_collection -- $path_to_psql -U postgres vmdb_production -a -e -c "REINDEX TABLE miq_queue "  >> /var/www/miq/vmdb/log/hourly_continuous_pg_maint_stdout.log 2>&1
+echo "REINDEX table miq_queue completed at $(date)" >> /var/www/miq/vmdb/log/hourly_continuous_pg_maint_stdout.log
+echo "=================" >> /var/www/miq/vmdb/log/hourly_continuous_pg_maint_stdout.log
