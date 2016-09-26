@@ -21,3 +21,9 @@ export APPLIANCE_TEMPLATE_DIRECTORY=${APPLIANCE_SOURCE_DIRECTORY}/TEMPLATE
 [[ -s /etc/default/evm_postgres ]] && source /etc/default/evm_postgres
 [[ -s /opt/rh/nodejs010/enable ]] && source /opt/rh/nodejs010/enable
 [[ -s /etc/default/evm_productization ]] && source /etc/default/evm_productization
+
+# Force locale
+export LANGUAGE=en_US.UTF-8
+export LANG=en_US.UTF-8
+export LC_CTYPE=en_US.UTF-8
+
