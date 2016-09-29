@@ -98,8 +98,11 @@ restorecon -R ${OLD_PGSQL_DIR}
 chmod 0700 ${OLD_PGSQL_DIR}/data
 chmod 0700 ${OLD_PGSQL_DIR}/data-new
 
+# fix fstab
+sed -i.bak -e "s=${OLD_PGSQL_DIR}/data=${NEW_PGSQL_DIR}=" /etc/fstab
+
 # mount the volume at the new location
-mount ${PG_LV_DEV} ${NEW_PGSQL_DIR}
+mount -a
 
 # init the new cluster
 su - postgres -c "initdb -D ${NEW_PGSQL_DIR}/data-new"
@@ -118,9 +121,6 @@ rm -rf ${OLD_PGSQL_DIR}/data
 # move new data directory into place
 mv ${NEW_PGSQL_DIR}/data-new ${NEW_PGSQL_DIR}/data
 restorecon -R ${NEW_PGSQL_DIR}
-
-# fix fstab
-sed -i.bak -e "s/${OLD_PG_NAME}/${NEW_PG_NAME}/" /etc/fstab
 
 # unmount volume from old location
 umount ${OLD_PGSQL_DIR}
