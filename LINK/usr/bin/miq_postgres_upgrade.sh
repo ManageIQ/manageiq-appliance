@@ -125,7 +125,10 @@ restorecon -R ${NEW_PGSQL_DIR}
 # unmount volume from old location
 umount ${OLD_PGSQL_DIR}
 
+systemctl disable ${OLD_PG_SERVICE}
+
 cat <<EOS
+
 The upgrade is complete
 
 Before starting the new server, the following changes must be made to the postgresql.conf file:
