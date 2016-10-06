@@ -14,6 +14,8 @@ NEW_PGSQL_DIR="/var/opt/rh/${NEW_PG_NAME}/lib/pgsql"
 
 PG_LV_DEV="/dev/mapper/vg_data-lv_pg"
 
+set -e
+
 # sanity checks
 
 # run as root
