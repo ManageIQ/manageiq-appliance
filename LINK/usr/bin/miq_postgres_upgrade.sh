@@ -77,7 +77,8 @@ fi
 umount ${OLD_PGSQL_DIR}/data
 mount ${PG_LV_DEV} ${OLD_PGSQL_DIR}
 mkdir ${OLD_PGSQL_DIR}/data
-mv ${OLD_PGSQL_DIR}/* ${OLD_PGSQL_DIR}/data
+# this will complain because of moving data into itself, but we're okay with that
+mv ${OLD_PGSQL_DIR}/* ${OLD_PGSQL_DIR}/data || true
 
 # create a directory for the new cluster
 mkdir ${OLD_PGSQL_DIR}/data-new
