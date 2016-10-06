@@ -41,19 +41,8 @@ then
 fi
 
 # make sure neither postgres service is running
-systemctl status ${OLD_PG_SERVICE} &> /dev/null
-if [ $? -eq 0 ]
-then
-  echo "${OLD_PG_SERVICE} must be stopped to upgrade, exiting."
-  exit 1
-fi
-
-systemctl status ${NEW_PG_SERVICE} &> /dev/null
-if [ $? -eq 0 ]
-then
-  echo "${NEW_PG_SERVICE} must be stopped to upgrade, exiting."
-  exit 1
-fi
+systemctl stop ${OLD_PG_SERVICE}
+systemctl stop ${NEW_PG_SERVICE}
 
 # TODO these two checks should point the the correct mount point for future versions (remove the /data from the checks)
 # make sure the old data directory is a mount point
