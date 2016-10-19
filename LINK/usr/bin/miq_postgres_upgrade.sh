@@ -14,8 +14,6 @@ NEW_PGSQL_DIR="/var/opt/rh/${NEW_PG_NAME}/lib/pgsql"
 
 PG_LV_DEV="/dev/mapper/vg_data-lv_pg"
 
-set -e
-
 # sanity checks
 
 # run as root
@@ -71,6 +69,8 @@ then
   echo "Exiting."
   exit 1
 fi
+
+set -e
 
 # fix mount point
 # TODO this can be removed when the default mount point is pgsql, rather than the data directory
