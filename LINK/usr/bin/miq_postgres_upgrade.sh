@@ -112,7 +112,9 @@ rm -rf ${OLD_PGSQL_DIR}/data
 
 # move new data directory into place
 mv ${NEW_PGSQL_DIR}/data-new ${NEW_PGSQL_DIR}/data
-restorecon -R ${NEW_PGSQL_DIR}
+
+restorecon -R /var/opt/rh/${NEW_PG_NAME}
+restorecon -R /opt/rh/${NEW_PG_NAME}
 
 # unmount volume from old location
 umount ${OLD_PGSQL_DIR}
