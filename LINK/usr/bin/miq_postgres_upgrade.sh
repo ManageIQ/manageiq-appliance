@@ -14,8 +14,6 @@ NEW_PGSQL_DIR="/var/opt/rh/${NEW_PG_NAME}/lib/pgsql"
 
 PG_LV_DEV="/dev/mapper/vg_data-lv_pg"
 
-set -e
-
 # sanity checks
 
 # run as root
@@ -72,6 +70,8 @@ then
   exit 1
 fi
 
+set -e
+
 # fix mount point
 # TODO this can be removed when the default mount point is pgsql, rather than the data directory
 umount ${OLD_PGSQL_DIR}/data
@@ -112,7 +112,9 @@ rm -rf ${OLD_PGSQL_DIR}/data
 
 # move new data directory into place
 mv ${NEW_PGSQL_DIR}/data-new ${NEW_PGSQL_DIR}/data
-restorecon -R ${NEW_PGSQL_DIR}
+
+restorecon -R /var/opt/rh/${NEW_PG_NAME}
+restorecon -R /opt/rh/${NEW_PG_NAME}
 
 # unmount volume from old location
 umount ${OLD_PGSQL_DIR}
