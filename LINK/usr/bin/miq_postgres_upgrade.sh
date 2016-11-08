@@ -99,6 +99,8 @@ mount -a
 # init the new cluster
 su - postgres -c "initdb -D ${NEW_PGSQL_DIR}/data-new"
 
+sed -i.bak -e "s/^#*shared_preload_libraries.*/shared_preload_libraries = 'pglogical'/" ${NEW_PGSQL_DIR}/data-new/postgresql.conf
+
 # upgrade
 su - postgres -c "source /opt/rh/${OLD_PG_NAME}/enable; /opt/rh/${NEW_PG_NAME}/root/usr/bin/pg_upgrade -b /opt/rh/${OLD_PG_NAME}/root/usr/bin -B /opt/rh/${NEW_PG_NAME}/root/usr/bin -d ${OLD_PGSQL_DIR}/data -D ${OLD_PGSQL_DIR}/data-new -k"
 
