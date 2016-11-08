@@ -38,6 +38,11 @@ then
   exit 1
 fi
 
+# grab the current replication slots from the old database
+systemctl start ${OLD_PG_SERVICE}
+SLOT_NAMES=$(psql -t -A -d vmdb_production -c "SELECT slot_name FROM pg_replication_slots WHERE slot_type = 'logical'")
+REP_ORIGIN_NAMES=$(psql -t -A -d vmdb_production -c "SELECT sub_slot_name FROM pglogical.subscription")
+
 # make sure neither postgres service is running
 systemctl stop ${OLD_PG_SERVICE}
 systemctl stop ${NEW_PG_SERVICE}
@@ -100,9 +105,39 @@ mount -a
 su - postgres -c "initdb -D ${NEW_PGSQL_DIR}/data-new"
 
 sed -i.bak -e "s/^#*shared_preload_libraries.*/shared_preload_libraries = 'pglogical'/" ${NEW_PGSQL_DIR}/data-new/postgresql.conf
+echo "max_replication_slots = 10" >> ${NEW_PGSQL_DIR}/data-new/postgresql.conf
+echo "wal_level = 'logical'" >> ${NEW_PGSQL_DIR}/data-new/postgresql.conf
 
 # upgrade
 su - postgres -c "source /opt/rh/${OLD_PG_NAME}/enable; /opt/rh/${NEW_PG_NAME}/root/usr/bin/pg_upgrade -b /opt/rh/${OLD_PG_NAME}/root/usr/bin -B /opt/rh/${NEW_PG_NAME}/root/usr/bin -d ${OLD_PGSQL_DIR}/data -D ${OLD_PGSQL_DIR}/data-new -k"
+
+# recreate the replication slots and create the replication origins
+echo "Starting PostgreSQL 9.5 to recreate replication meta information"
+su - postgres -c "pg_ctl -w -D ${NEW_PGSQL_DIR}/data-new start"
+
+if [ -n "${SLOT_NAMES}" ]
+then
+  echo "Recreating replication slots ..."
+  echo "${SLOT_NAMES}" | while read SLOT
+  do
+    echo "Creating replication slot ${SLOT}"
+    psql -d vmdb_production -c "SELECT * from pg_create_logical_replication_slot('${SLOT}', 'pglogical_output')"
+  done
+  echo "Replication slots created."
+fi
+
+if [ -n "${REP_ORIGIN_NAMES}" ]
+then
+  echo "Creating replication origins ..."
+  echo "${REP_ORIGIN_NAMES}" | while read ORIGIN
+  do
+    echo "Creating origin ${ORIGIN}"
+    psql -d vmdb_production -c "SELECT * FROM pg_replication_origin_create('${ORIGIN}')"
+  done
+  echo "Replication origins created."
+fi
+
+su - postgres -c "pg_ctl -D ${NEW_PGSQL_DIR}/data-new stop"
 
 # copy conf files
 cp ${OLD_PGSQL_DIR}/data/postgresql.conf ${OLD_PGSQL_DIR}/data-new
