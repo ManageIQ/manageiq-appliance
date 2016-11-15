@@ -1,16 +1,11 @@
 #!/usr/bin/env ruby
 
-require "pathname"
-
-# Handle development environment by setting up Gemfile and manageiq location
-ENV['BUNDLE_GEMFILE'] ||= File.expand_path('../../../../manageiq/Gemfile', __dir__)
-ROOT ||= File.dirname(ENV['BUNDLE_GEMFILE'])
-
 require 'bundler'
 Bundler.setup
 
-$LOAD_PATH.push("#{ROOT}/gems/pending")
+require "pathname"
+RAILS_ROOT = Pathname.new("/var/www/miq/vmdb")
 
+require "manageiq-gems-pending"
 require 'appliance_console/cli'
-
 ApplianceConsole::Cli.parse(ARGV)

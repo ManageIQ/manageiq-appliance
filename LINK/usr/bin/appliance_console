@@ -1,7 +1,10 @@
-#!/bin/bash
-# description: ManageIQ appliance console launcher
-#
+#!/usr/bin/env ruby
 
-[[ -s /etc/default/evm ]] && source /etc/default/evm
+require "bundler"
+Bundler.setup
 
-ruby /var/www/miq/vmdb/gems/pending/appliance_console.rb $@
+require "pathname"
+RAILS_ROOT = Pathname.new("/var/www/miq/vmdb")
+
+require "manageiq-gems-pending"
+require "appliance_console"
