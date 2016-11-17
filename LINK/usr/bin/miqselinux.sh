@@ -4,7 +4,7 @@
 # The appliance needs an selinux policy to access sssd via dbus
 if [ -z "`/sbin/semodule -l | grep '^init_dbus_sssd	'`" ]
 then
-  SMOD=/tmp/miq_init_dbus_sssd
+  SMOD=/tmp/init_dbus_sssd
   cat - >$SMOD.te <<!END!
 module init_dbus_sssd 1.0;
 
