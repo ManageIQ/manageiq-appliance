@@ -16,7 +16,7 @@ LoadModule auth_kerb_module modules/mod_auth_kerb.so
   ErrorDocument 401 /proxy_pages/invalid_sso_credentials.js
 </Location>
 
-<Location /dashboard/authenticate>
+<Location /dashboard/external_authenticate>
   InterceptFormPAMService httpd-auth
   InterceptFormLogin      user_name
   InterceptFormPassword   user_password
@@ -24,7 +24,7 @@ LoadModule auth_kerb_module modules/mod_auth_kerb.so
   InterceptFormClearRemoteUserForSkipped on
 </Location>
 
-<LocationMatch ^/dashboard/authenticate$|^/dashboard/kerberos_authenticate$>
+<LocationMatch ^/dashboard/external_authenticate$|^/dashboard/kerberos_authenticate$>
   LookupUserAttr mail        REMOTE_USER_EMAIL
   LookupUserAttr givenname   REMOTE_USER_FIRSTNAME
   LookupUserAttr sn          REMOTE_USER_LASTNAME
