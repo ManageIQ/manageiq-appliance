@@ -9,7 +9,6 @@ export HOME=${HOME:-/root}
 export EXECJS_RUNTIME='Node'
 # workaround for virtual memory spike observed with RHEL6
 export MALLOC_ARENA_MAX=1
-export MALLOC_MMAP_THRESHOLD=131072
 # Location of certificates and provider keys
 export KEY_ROOT=/var/www/miq/vmdb/certs
 
