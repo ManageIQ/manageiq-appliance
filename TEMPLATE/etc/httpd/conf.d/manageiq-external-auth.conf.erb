@@ -39,6 +39,7 @@ LoadModule auth_kerb_module modules/mod_auth_kerb.so
 <LocationMatch ^/api|^/vmdbws/wsdl|^/vmdbws/api>
   SetEnvIf Authorization '^Basic +YWRtaW46' let_admin_in
   SetEnvIf X-Auth-Token  '^.+$'             let_api_token_in
+  SetEnvIf X-MIQ-Token   '^.+$'             let_sys_token_in
 
   AuthType Basic
   AuthName "External Authentication (httpd) for API"
@@ -49,6 +50,7 @@ LoadModule auth_kerb_module modules/mod_auth_kerb.so
   Order          Allow,Deny
   Allow from env=let_admin_in
   Allow from env=let_api_token_in
+  Allow from env=let_sys_token_in
   Satisfy Any
 
   LookupUserAttr mail        REMOTE_USER_EMAIL
