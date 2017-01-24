@@ -69,7 +69,7 @@ Please be sure to have backed up your cluster before upgrading.
 
 EOS
 read -p "Are you sure you want to proceed? (Y/N): " response
-if [ "$response" != "Y" ]
+if [ "$response" != "Y" -a "$response" != "y" ]
 then
   echo "Exiting."
   exit 1
