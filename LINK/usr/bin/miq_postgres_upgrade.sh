@@ -71,8 +71,11 @@ EOS
 read -p "Are you sure you want to proceed? (Y/N): " response
 if [ "$response" != "Y" ]
 then
+  if [ "$response" != "y" ]
+  then
   echo "Exiting."
   exit 1
+  fi
 fi
 
 set -e
