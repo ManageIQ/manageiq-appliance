@@ -1,5 +1,8 @@
 #!/bin/env ruby
 
+require 'bundler'
+Bundler.setup
+
 require 'manageiq-gems-pending'
 require 'postgres_ha_admin/failover_monitor'
 
