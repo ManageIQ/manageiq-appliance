@@ -2,6 +2,9 @@
 # description: ManageIQ watchdog application loop
 #
 
+require 'bundler'
+Bundler.setup
+
 require 'manageiq-gems-pending'
 require 'util/system/evm_watchdog'
 
