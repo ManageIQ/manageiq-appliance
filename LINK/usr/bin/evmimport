@@ -1,0 +1,170 @@
+#!/usr/bin/env bash
+
+assert_num_args () {
+  num_args_received=$1
+  num_args_expected=$2
+  if [ "$num_args_received" -ne "$num_args_expected" ]
+  then
+    echo "Error: Wrong number of arguments (expected=$num_args_expected received=$num_args_received)"
+    usage
+    exit 1
+  fi
+}
+
+assert_import_dir_exists () {
+  import_dir=$1
+  if [ ! -d "$import_dir" ]
+  then
+    echo "Import directory doesn't exist! [${import_dir}]"
+    exit 1
+  fi
+}
+
+assert_import_file_or_dir_exists () {
+  import_file_or_dir=$1
+  if [ ! -f "$import_file_or_dir" ] && [ ! -d "$import_file_or_dir" ]
+  then
+    echo "Import file/directory doesn't exist! [${import_file_or_dir}]"
+    exit 1
+  fi
+}
+
+op_alerts () {
+  assert_num_args $# 1
+  IMPORT_FILE_OR_DIR=$(readlink -v -f "$1")
+  assert_import_file_or_dir_exists "$IMPORT_FILE_OR_DIR"
+
+  pushd /var/www/miq/vmdb > /dev/null
+  bin/rake "evm:import:alerts[${IMPORT_FILE_OR_DIR}]"
+  popd > /dev/null
+}
+
+op_alertprofiles () {
+  assert_num_args $# 1
+  IMPORT_FILE_OR_DIR=$(readlink -v -f "$1")
+  assert_import_file_or_dir_exists "$IMPORT_FILE_OR_DIR"
+
+  pushd /var/www/miq/vmdb > /dev/null
+  bin/rake "evm:import:alertsets[${IMPORT_FILE_OR_DIR}]"
+  popd > /dev/null
+}
+
+contains () {
+  SEARCH_TERM=$1
+  shift
+  LIST="$@"
+
+  for element in $LIST; do
+    if [[ "$SEARCH_TERM" == "$element" ]]; then
+      return 0
+    fi
+  done
+
+  return 1
+}
+
+parse_arguments () {
+  # initialize non-required arguments before the loop in case they are
+  # not present in the command line
+  OVERWRITE="false"
+  ENABLED="true"
+  TENANT_NAME=""
+  TENANT_ID=""
+
+  # http://stackoverflow.com/questions/402377/using-getopts-in-bash-shell-script-to-get-long-and-short-command-line-options
+  # http://stackoverflow.com/questions/14786984/best-way-to-parse-cmdline-args-bash
+  while [[ $# -ge 1 ]]
+  do
+    arg="$1"
+    case "$arg" in
+      --overwrite)
+        OVERWRITE="true"
+        shift # past the argument
+        ;;
+      --no-overwrite)
+        OVERWRITE="false"
+        shift # past the argument
+        ;;
+      --enabled)
+        ENABLED="true"
+        shift # past the argument
+        ;;
+      --disabled)
+        ENABLED="false"
+        shift # past the argument
+        ;;
+      --tenant-name)
+        TENANT_NAME="$2"
+        shift # past the argument
+        shift # past the value
+        ;;
+      --tenant-name=*)
+        TENANT_NAME="${arg#*=}"
+        shift # past the argument=value
+        ;;
+      --tenant-id)
+        TENANT_ID="$2"
+        shift # past the argument
+        shift # past the value
+        ;;
+      --tenant-id=*)
+        TENANT_ID="${arg#*=}"
+        shift # past the argument=value
+        ;;
+      --)
+        shift # past the argument
+        break # stop parsing arguments
+        ;;
+      *)
+        # unknown option
+        break # stop parsing arguments
+        ;;
+    esac
+  done
+
+  # if there are any required arguments check for them here
+
+  # pass the shifted arguments back to the caller
+  remaining_args="$@"
+}
+
+parse_action () {
+  AVAILABLE_PARSERS=`compgen -A function | grep '^op_'`
+
+  obj_type="$1"
+  op_func="op_${obj_type}"
+  contains $op_func $AVAILABLE_PARSERS; VALID_OP=$?
+
+  if [ $VALID_OP -eq 0 ]
+  then
+    shift
+    $op_func "$@"
+  else
+    echo "Error: Unknown object type: $obj_type"
+    usage
+    exit 1
+  fi
+}
+
+usage () {
+progname=`basename $0`
+
+  cat << EOF
+Usage: $progname <object_type> <additional_params> <importsource>
+
+This command imports the specified object type from the <importsource>,
+which may be a file or directory.
+
+<additional_params> may be required depending on the type of object to be
+imported.
+
+Available Object Types:
+  alerts                           Import Alerts
+  alertprofiles                    Import Alert Profiles
+
+EOF
+}
+
+parse_arguments "$@"
+parse_action "$remaining_args"
+exit 0
