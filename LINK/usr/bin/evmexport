@@ -54,40 +54,11 @@ contains () {
   return 1
 }
 
-parse_arguments () {
-  # initialize non-required arguments before the loop in case they are
-  # not present in the command line
-  KEEP_SPACES="false"
-
-  # http://stackoverflow.com/questions/402377/using-getopts-in-bash-shell-script-to-get-long-and-short-command-line-options
-  # http://stackoverflow.com/questions/14786984/best-way-to-parse-cmdline-args-bash
-  while [[ $# -ge 1 ]]
-  do
-    arg="$1"
-    case "$arg" in
-      -s|--keep-spaces)
-        KEEP_SPACES="true"
-        shift # past the argument
-        ;;
-      --)
-        shift # past the argument
-        break # stop parsing arguments
-        ;;
-      *)
-        # unknown option
-        break # stop parsing arguments
-        ;;
-    esac
-  done
-
-  # if there are any required arguments check for them here
-
-  # pass the shifted arguments back to the caller
-  remaining_args="$@"
-}
-
 parse_action () {
-  AVAILABLE_PARSERS=`compgen -A function | grep '^op_'`
+  AVAILABLE_PARSERS=" \
+    op_alerts \
+    op_alertprofiles \
+  "
 
   obj_type="$1"
   op_func="op_${obj_type}"
@@ -105,7 +76,7 @@ parse_action () {
 }
 
 usage () {
-progname=`basename $0`
+  progname=`basename $0`
 
   cat << EOF
 Usage: $progname [OPTION...] <object_type> <additional_params> <exportdest>
@@ -128,6 +99,34 @@ Options:
 EOF
 }
 
-parse_arguments "$@"
-parse_action "$remaining_args"
+# initialize non-required arguments before the loop in case they are
+# not present in the command line
+KEEP_SPACES="false"
+
+# http://stackoverflow.com/questions/402377/using-getopts-in-bash-shell-script-to-get-long-and-short-command-line-options
+# http://stackoverflow.com/questions/14786984/best-way-to-parse-cmdline-args-bash
+while [[ $# -ge 1 ]]
+do
+arg="$1"
+case "$arg" in
+  -s|--keep-spaces)
+    KEEP_SPACES="true"
+    shift
+    ;;
+  -?|-h|--help)
+    usage
+    exit 0
+    ;;
+  --)
+    shift
+    break
+    ;;
+  *)
+    # unknown option
+    break
+    ;;
+esac
+done
+
+parse_action "$@"
 exit 0

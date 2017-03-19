@@ -63,73 +63,11 @@ contains () {
   return 1
 }
 
-parse_arguments () {
-  # initialize non-required arguments before the loop in case they are
-  # not present in the command line
-  OVERWRITE="false"
-  ENABLED="true"
-  TENANT_NAME=""
-  TENANT_ID=""
-
-  # http://stackoverflow.com/questions/402377/using-getopts-in-bash-shell-script-to-get-long-and-short-command-line-options
-  # http://stackoverflow.com/questions/14786984/best-way-to-parse-cmdline-args-bash
-  while [[ $# -ge 1 ]]
-  do
-    arg="$1"
-    case "$arg" in
-      --overwrite)
-        OVERWRITE="true"
-        shift # past the argument
-        ;;
-      --no-overwrite)
-        OVERWRITE="false"
-        shift # past the argument
-        ;;
-      --enabled)
-        ENABLED="true"
-        shift # past the argument
-        ;;
-      --disabled)
-        ENABLED="false"
-        shift # past the argument
-        ;;
-      --tenant-name)
-        TENANT_NAME="$2"
-        shift # past the argument
-        shift # past the value
-        ;;
-      --tenant-name=*)
-        TENANT_NAME="${arg#*=}"
-        shift # past the argument=value
-        ;;
-      --tenant-id)
-        TENANT_ID="$2"
-        shift # past the argument
-        shift # past the value
-        ;;
-      --tenant-id=*)
-        TENANT_ID="${arg#*=}"
-        shift # past the argument=value
-        ;;
-      --)
-        shift # past the argument
-        break # stop parsing arguments
-        ;;
-      *)
-        # unknown option
-        break # stop parsing arguments
-        ;;
-    esac
-  done
-
-  # if there are any required arguments check for them here
-
-  # pass the shifted arguments back to the caller
-  remaining_args="$@"
-}
-
 parse_action () {
-  AVAILABLE_PARSERS=`compgen -A function | grep '^op_'`
+  AVAILABLE_PARSERS=" \
+      op_alerts \
+      op_alertprofiles \
+  "
 
   obj_type="$1"
   op_func="op_${obj_type}"
@@ -147,7 +85,7 @@ parse_action () {
 }
 
 usage () {
-progname=`basename $0`
+  progname=`basename $0`
 
   cat << EOF
 Usage: $progname <object_type> <additional_params> <importsource>
@@ -165,6 +103,65 @@ Available Object Types:
 EOF
 }
 
-parse_arguments "$@"
-parse_action "$remaining_args"
+# initialize non-required arguments before the loop in case they are
+# not present in the command line
+OVERWRITE="false"
+ENABLED="true"
+TENANT_NAME=""
+TENANT_ID=""
+
+# http://stackoverflow.com/questions/402377/using-getopts-in-bash-shell-script-to-get-long-and-short-command-line-options
+# http://stackoverflow.com/questions/14786984/best-way-to-parse-cmdline-args-bash
+while [[ $# -ge 1 ]]
+do
+arg="$1"
+case "$arg" in
+  --overwrite)
+    OVERWRITE="true"
+    shift
+    ;;
+  --no-overwrite)
+    OVERWRITE="false"
+    shift
+    ;;
+  --enabled)
+    ENABLED="true"
+    shift
+    ;;
+  --disabled)
+    ENABLED="false"
+    shift
+    ;;
+  --tenant-name)
+    TENANT_NAME="$2"
+    shift 2
+    ;;
+  --tenant-name=*)
+    TENANT_NAME="${arg#*=}"
+    shift
+    ;;
+  --tenant-id)
+    TENANT_ID="$2"
+    shift 2
+    ;;
+  --tenant-id=*)
+    TENANT_ID="${arg#*=}"
+    shift
+    ;;
+  -?|-h|--help)
+    usage
+    exit 0
+    ;;
+  --)
+    shift
+    break
+    ;;
+  *)
+    # unknown option
+    break
+    ;;
+esac
+done
+
+parse_action "$@"
 exit 0
