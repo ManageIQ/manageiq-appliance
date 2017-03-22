@@ -1,7 +1,7 @@
 # add a trailing slash to all requests to the ansible api
 RewriteCond %{REQUEST_URI} ^/ansibleapi
 RewriteCond %{REQUEST_URI} !(.*)/$
-RewriteRule ^(.*)$ $1/ [R,L]
+RewriteRule ^(.*)$ $1/ [R,NE,L]
 
 ProxyPass /ansibleapi/ http://localhost:54321/api/
 ProxyPassReverse /ansibleapi/ http://localhost:54321/api/
