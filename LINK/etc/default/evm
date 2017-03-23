@@ -18,6 +18,7 @@ export APPLIANCE_TEMPLATE_DIRECTORY=${APPLIANCE_SOURCE_DIRECTORY}/TEMPLATE
 [[ -s /etc/default/evm_ruby ]] && source /etc/default/evm_ruby
 [[ -s /etc/default/evm_bundler ]] && source /etc/default/evm_bundler
 [[ -s /etc/default/evm_postgres ]] && source /etc/default/evm_postgres
+[[ -s /etc/default/evm_apache ]] && source /etc/default/evm_apache
 [[ -s /etc/default/evm_productization ]] && source /etc/default/evm_productization
 
 # Force locale
