@@ -3,6 +3,7 @@
 # description: Initializes the evm environment
 #
 
+[[ -s /etc/default/evm ]] && source /etc/default/evm
 
 # Some variables to shorten things
 VMDBDIR=/var/www/miq/vmdb
@@ -16,4 +17,10 @@ rm -rfv $PID_DIR/evm.pid >> $EVMLOG
 
 
 # Rescan for LVM Physical Volumes since RHEV DirectLUN PV's aren't always found.
-pvscan
+# Skip pvscan when running on container platforms
+
+if [[ -n ${CONTAINER} ]]; then
+  echo "Skipping pvscan on container platforms.."
+else
+  pvscan
+fi
