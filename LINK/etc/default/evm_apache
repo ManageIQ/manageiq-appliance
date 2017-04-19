@@ -2,9 +2,7 @@
 # Description: Sets the Apache environment based on config/apache.yml
 #
 
-RUBY_EXEC=  # line defined at appliance build time
-
-eval `$RUBY_EXEC -e '
+eval `ruby -e '
   require "yaml"
   config=YAML.load_file("/var/www/miq/vmdb/config/apache.yml")
 
