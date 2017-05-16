@@ -1,6 +1,5 @@
 #!/bin/bash
 
-PATH=/sbin:/bin:/usr/sbin:/usr/bin:/usr/local:/usr/local/sbin:/usr/local/bin
 BASEDIR="/var/www/miq/vmdb"
 RETVAL=0
 cd $BASEDIR
