@@ -8,10 +8,10 @@ setsebool -P httpd_can_network_connect on
 [[ -x /usr/bin/miqselinux.sh ]] && /usr/bin/miqselinux.sh
 
 # backup the default ssl.conf
-mv /etc/httpd/conf.d/ssl.conf{,.orig}
+mv ${APPLIANCE_APACHE_CONFIG_DIR}/ssl.conf{,.orig}
 
 # https://bugzilla.redhat.com/show_bug.cgi?id=1020042
-cat <<'EOF' > /etc/httpd/conf.d/ssl.conf
+cat <<'EOF' > ${APPLIANCE_APACHE_CONFIG_DIR}/ssl.conf
 # This file intentionally left blank. ManageIQ maintains its own SSL
 # configuration.  The presence of this file prevents the version
 # supplied by mod_ssl from being installed when the mod_ssl package is

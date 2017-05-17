@@ -1,0 +1,20 @@
+#!/bin/bash
+# Description: Sets the Apache environment based on config/apache.yml
+#
+
+eval `ruby -e '
+  require "yaml"
+  config=YAML.load_file("/var/www/miq/vmdb/config/apache.yml")
+
+  puts "
+    export APPLIANCE_APACHE_PACKAGE_NAME=#{config[:package_name]}
+    export APPLIANCE_APACHE_SERVICE_NAME=#{config[:service_name]}
+    export APPLIANCE_APACHE_ROOT_DIR=#{config[:root_dir]}
+    export APPLIANCE_APACHE_BASE_DIR=#{config[:base_dir]}
+    export APPLIANCE_APACHE_CONFIG_DIR=#{config[:config_dir]}
+    export APPLIANCE_APACHE_APACHECTL=#{config[:apachectl]}
+  "
+'`
+
+[[ -s ${APPLIANCE_APACHE_BASE_DIR}/enable ]] && source ${APPLIANCE_APACHE_BASE_DIR}/enable
+

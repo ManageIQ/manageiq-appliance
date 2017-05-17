@@ -14,5 +14,5 @@ alias tailpglog='tail -f $APPLIANCE_PG_DATA/pg_log/postgresql.log'
 
 # Appliance Status:
 alias apstatus='echo;systemctl status evmserverd -n 0;echo; \
-systemctl status httpd.service -n 0;echo;systemctl status memcached -n 0; \
+systemctl status ${APPLIANCE_APACHE_SERVICE_NAME} -n 0;echo;systemctl status memcached -n 0; \
 echo -e "\nPostgreSQL service:"; pg_isready'
