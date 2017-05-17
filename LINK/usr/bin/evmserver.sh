@@ -7,7 +7,7 @@ cd $BASEDIR
 # Load default environment and variables
 [[ -s "/etc/default/evm" ]] && source "/etc/default/evm"
 
-[[ -x "${APPLIANCE_SOURCE_DIRECTORY}/initialize_appliance.sh" ]] && ${APPLIANCE_SOURCE_DIRECTORY}/initialize_appliance.sh
+/usr/bin/generate_miq_server_cert.sh
 
 start() {
   rake evm:start
