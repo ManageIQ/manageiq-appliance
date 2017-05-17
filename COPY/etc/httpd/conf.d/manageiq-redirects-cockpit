@@ -1,0 +1,9 @@
+ProxyPreserveHost on
+RequestHeader unset X-Forwarded-Proto
+RequestHeader set X-Forwarded-Proto 'https' env=HTTPS
+
+<LocationMatch "^/cws/cockpi(t[^/]+|t)?/socket$">
+    ProxyPassMatch "ws://localhost:9002/cws/cockpi$1/socket"
+</LocationMatch>
+
+ProxyPass /cws/ http://localhost:9002/cws/
