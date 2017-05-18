@@ -1,0 +1,10 @@
+RewriteRule ^/ui/service(?!/(assets|images|img|styles|js|fonts|vendor|gettext)) /ui/service/index.html [L]
+RewriteRule ^/self_service(.*) /ui/service$1 [R]
+RewriteCond %{REQUEST_URI} !^/ws
+RewriteCond %{REQUEST_URI} !^/proxy_pages
+RewriteCond %{REQUEST_URI} !^/saml2
+RewriteCond %{REQUEST_URI} !^/api
+RewriteCond %{REQUEST_URI} !^/ansibleapi
+RewriteCond %{DOCUMENT_ROOT}/%{REQUEST_FILENAME} !-f
+RewriteRule ^/ balancer://evmcluster_ui%{REQUEST_URI} [P,QSA,L]
+ProxyPassReverse / balancer://evmcluster_ui/

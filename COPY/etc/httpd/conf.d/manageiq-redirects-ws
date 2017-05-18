@@ -1,0 +1,2 @@
+ProxyPass /api balancer://evmcluster_ws/api
+ProxyPassReverse /api balancer://evmcluster_ws/api
