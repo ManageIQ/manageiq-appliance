@@ -29,6 +29,7 @@ LoadModule auth_kerb_module modules/mod_auth_kerb.so
   LookupUserAttr givenname   REMOTE_USER_FIRSTNAME
   LookupUserAttr sn          REMOTE_USER_LASTNAME
   LookupUserAttr displayname REMOTE_USER_FULLNAME
+  LookupUserAttr domainname  REMOTE_USER_DOMAIN
 
   LookupUserGroups           REMOTE_USER_GROUPS ":"
   LookupDbusTimeout          5000
@@ -57,6 +58,7 @@ LoadModule auth_kerb_module modules/mod_auth_kerb.so
   LookupUserAttr givenname   REMOTE_USER_FIRSTNAME
   LookupUserAttr sn          REMOTE_USER_LASTNAME
   LookupUserAttr displayname REMOTE_USER_FULLNAME
+  LookupUserAttr domainname  REMOTE_USER_DOMAIN
 
   LookupUserGroups           REMOTE_USER_GROUPS ":"
   LookupDbusTimeout          5000
