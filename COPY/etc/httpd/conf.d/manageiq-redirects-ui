@@ -1,5 +1,6 @@
 RewriteRule ^/ui/service(?!/(assets|images|img|styles|js|fonts|vendor|gettext)) /ui/service/index.html [L]
 RewriteRule ^/self_service(.*) /ui/service$1 [R]
+RewriteCond %{REQUEST_URI} !^/cws
 RewriteCond %{REQUEST_URI} !^/ws
 RewriteCond %{REQUEST_URI} !^/proxy_pages
 RewriteCond %{REQUEST_URI} !^/saml2
