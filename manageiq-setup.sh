@@ -21,31 +21,55 @@ EOF
 /usr/sbin/semanage fcontext -a -t httpd_log_t "/var/www/miq/vmdb/log(/.*)?"
 /usr/sbin/semanage fcontext -a -t cert_t "/var/www/miq/vmdb/certs(/.*)?"
 /usr/sbin/semanage fcontext -a -t logrotate_exec_t ${APPLIANCE_SOURCE_DIRECTORY}/logrotate_free_space_check.sh
-/usr/sbin/semanage fcontext -a -t etc_t "/var/www/miq/vmdb/config/cockpit"
+/usr/sbin/semanage fcontext -a -t cockpit_ws_exec_t "/var/www/miq/vmdb/tools/cockpit/cockpit-auth-miq"
 
-cat <<'EOF' > /tmp/cockpit_ws_port.te
-module cockpit_ws_port 1.0;
-
+cat <<'EOF' > /tmp/cockpit_ws_miq.te
+module cockpit_ws_miq 1.0;
 require {
     attribute port_type;
-	type cockpit_ws_t;
-	class tcp_socket { name_bind };
+    type cockpit_ws_t;
+    type bin_t;
+    type usr_t;
+    type user_home_dir_t;
+    type ephemeral_port_t;
+    type httpd_sys_content_t;
+    type proc_t;
+    class capability dac_read_search;
+    class tcp_socket name_connect;
+    class lnk_file { getattr read };
+    class file { execute execute_no_trans getattr ioctl open read };
+    class dir { read write };
+    class tcp_socket { name_bind };
+    class dir audit_access;
 }
 
-type cockpit_ws_port_t, port_type;
-allow cockpit_ws_t cockpit_ws_port_t:tcp_socket name_bind;
-EOF
-checkmodule -M -m -o /tmp/cockpit_ws_port.mod /tmp/cockpit_ws_port.te
-semodule_package -o /tmp/cockpit_ws_port.pp -m /tmp/cockpit_ws_port.mod
-semodule -i /tmp/cockpit_ws_port.pp
+type cockpit_ws_miq_t, port_type;
+allow cockpit_ws_t cockpit_ws_miq_t:tcp_socket name_bind;
 
-semanage port -a -t cockpit_ws_port_t -p tcp 9002
+allow cockpit_ws_t bin_t:file execute;
+allow cockpit_ws_t usr_t:file { execute execute_no_trans };
+
+allow cockpit_ws_t ephemeral_port_t:tcp_socket name_connect;
+allow cockpit_ws_t httpd_sys_content_t:dir read;
+allow cockpit_ws_t httpd_sys_content_t:file { getattr ioctl open read };
+allow cockpit_ws_t httpd_sys_content_t:lnk_file { getattr read };
+allow cockpit_ws_t proc_t:file { getattr open read };
+allow cockpit_ws_t self:capability dac_read_search;
+dontaudit cockpit_ws_t user_home_dir_t:dir audit_access;
+dontaudit cockpit_ws_t usr_t:dir audit_access;
+EOF
+
+checkmodule -M -m -o /tmp/cockpit_ws_miq.mod /tmp/cockpit_ws_miq.te
+semodule_package -o /tmp/cockpit_ws_miq.pp -m /tmp/cockpit_ws_miq.mod
+semodule -i /tmp/cockpit_ws_miq.pp
+
+semanage port -a -t cockpit_ws_miq_t -p tcp 9002
 
 [ -x /sbin/restorecon ] && /sbin/restorecon -R -v /var/www/miq/vmdb/log
 [ -x /sbin/restorecon ] && /sbin/restorecon -R -v /etc/sysconfig
 [ -x /sbin/restorecon ] && /sbin/restorecon -R -v /var/www/miq/vmdb/certs
 [ -x /sbin/restorecon ] && /sbin/restorecon -R -v ${APPLIANCE_SOURCE_DIRECTORY}/logrotate_free_space_check.sh
-[ -x /sbin/restorecon ] && /sbin/restorecon -R -v "/var/www/miq/vmdb/config/cockpit"
+[ -x /sbin/restorecon ] && /sbin/restorecon -R -v "/var/www/miq/vmdb/tools/cockpit/cockpit-auth-miq"
 
 # relabel the pg_log directory in postgresql datadir, but defer restorecon
 # until after the database is initialized during firstboot configuration
