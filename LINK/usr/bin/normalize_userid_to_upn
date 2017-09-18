@@ -1,0 +1,5 @@
+#!/bin/bash
+# description: Launch miqldap_to_sssd to normalize userids to upn format
+
+cd /var/www/miq/vmdb
+bundle exec ruby tools/miqldap_to_sssd.rb "-n"
