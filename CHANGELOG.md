@@ -4,6 +4,16 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 
+
+## Unreleased as of Sprint 69 ending 2017-09-18
+
+### Added
+- Enable redis in /etc/default/evm [(#135)](https://github.com/ManageIQ/manageiq-appliance/pull/135)
+- Add miqldap_to_sssd launcher [(#134)](https://github.com/ManageIQ/manageiq-appliance/pull/134)
+
+### Removed
+- Remove enable for redis [(#136)](https://github.com/ManageIQ/manageiq-appliance/pull/136)
+
 ## Unreleased as of Sprint 68 ending 2017-09-04
 
 ### Fixed
