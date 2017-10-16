@@ -23,29 +23,18 @@ EOF
 /usr/sbin/semanage fcontext -a -t logrotate_exec_t ${APPLIANCE_SOURCE_DIRECTORY}/logrotate_free_space_check.sh
 /usr/sbin/semanage fcontext -a -t etc_t "/var/www/miq/vmdb/config/cockpit"
 
-cat <<'EOF' > /tmp/cockpit_ws_port.te
-module cockpit_ws_port 1.0;
-
-require {
-    attribute port_type;
-	type cockpit_ws_t;
-	class tcp_socket { name_bind };
-}
-
-type cockpit_ws_port_t, port_type;
-allow cockpit_ws_t cockpit_ws_port_t:tcp_socket name_bind;
-EOF
-checkmodule -M -m -o /tmp/cockpit_ws_port.mod /tmp/cockpit_ws_port.te
-semodule_package -o /tmp/cockpit_ws_port.pp -m /tmp/cockpit_ws_port.mod
-semodule -i /tmp/cockpit_ws_port.pp
-
-semanage port -a -t cockpit_ws_port_t -p tcp 9002
-
 [ -x /sbin/restorecon ] && /sbin/restorecon -R -v /var/www/miq/vmdb/log
 [ -x /sbin/restorecon ] && /sbin/restorecon -R -v /etc/sysconfig
 [ -x /sbin/restorecon ] && /sbin/restorecon -R -v /var/www/miq/vmdb/certs
 [ -x /sbin/restorecon ] && /sbin/restorecon -R -v ${APPLIANCE_SOURCE_DIRECTORY}/logrotate_free_space_check.sh
 [ -x /sbin/restorecon ] && /sbin/restorecon -R -v "/var/www/miq/vmdb/config/cockpit"
+
+# Relabel cockpit executables to run in the same contexts
+# as the rest of the miq workers
+/usr/sbin/semanage fcontext -a -t usr_t /usr/libexec/cockpit-ws
+/usr/sbin/semanage fcontext -a -t usr_t /usr/libexec/cockpit-ssh
+[ -x /sbin/restorecon ] && /sbin/restorecon -v /usr/libexec/cockpit-ws
+[ -x /sbin/restorecon ] && /sbin/restorecon -v /usr/libexec/cockpit-ssh
 
 # relabel the pg_log directory in postgresql datadir, but defer restorecon
 # until after the database is initialized during firstboot configuration
