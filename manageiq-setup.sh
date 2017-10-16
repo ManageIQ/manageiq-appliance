@@ -28,6 +28,7 @@ EOF
 [ -x /sbin/restorecon ] && /sbin/restorecon -R -v /var/www/miq/vmdb/certs
 [ -x /sbin/restorecon ] && /sbin/restorecon -R -v ${APPLIANCE_SOURCE_DIRECTORY}/logrotate_free_space_check.sh
 [ -x /sbin/restorecon ] && /sbin/restorecon -R -v "/var/www/miq/vmdb/config/cockpit"
+[ -x /sbin/restorecon ] && /sbin/restorecon -R -v /usr/bin
 
 # Relabel cockpit executables to run in the same contexts
 # as the rest of the miq workers
