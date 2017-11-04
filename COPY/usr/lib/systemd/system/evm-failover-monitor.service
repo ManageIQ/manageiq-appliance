@@ -3,7 +3,7 @@ Description=PostgreSQL Failover Monitor for ManageIQ
 After=evmserverd.service
 
 [Service]
-ExecStart=source /etc/default/evm && bundle exec postgres_ha_admin
+ExecStart=/bin/sh -c /etc/default/evm && bundle exec postgres_ha_admin
 Restart=on-failure
 
 [Install]
