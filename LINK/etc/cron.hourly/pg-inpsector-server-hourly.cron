@@ -1,3 +1,3 @@
 #!/bin/bash
 
-pg_inspector_server.sh
+pg_inspector_server.sh > /dev/null
