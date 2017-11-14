@@ -1,7 +1,5 @@
-inherit_from:
-- .rubocop_base.yml
 #
 # Overrides
 #
-AllCops:
-  TargetRubyVersion: 2.2
+# AllCops:
+#   TargetRubyVersion: 2.2
