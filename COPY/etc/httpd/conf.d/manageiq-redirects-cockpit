@@ -6,4 +6,5 @@ RequestHeader set X-Forwarded-Proto 'https' env=HTTPS
     ProxyPassMatch "ws://localhost:9002/cws/cockpi$1/socket"
 </LocationMatch>
 
+RewriteRule ^/cws/=([^/]+)$ /cws/=$1/ [L,R=302]
 ProxyPass /cws/ http://localhost:9002/cws/
