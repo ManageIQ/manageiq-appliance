@@ -4,6 +4,15 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 
+## Gaprindashvili RC
+
+### Added
+- Restore the context of usr/bin for docker executable issues [(#160)](https://github.com/ManageIQ/manageiq-appliance/pull/160)
+
+### Fixed
+- Add /usr/local/bin to the path if it is missing [(#159)](https://github.com/ManageIQ/manageiq-appliance/pull/159)
+- Use a better command to add /usr/local/bin to the path [(#161)](https://github.com/ManageIQ/manageiq-appliance/pull/161)
+- Increase applinace_console version in manageiq-appliance-dependencies.rb to 1.1 [(#163)](https://github.com/ManageIQ/manageiq-appliance/pull/163)
 
 ## Gaprindashvili Beta2
 
