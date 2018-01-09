@@ -29,5 +29,5 @@ then
 fi
 
 echo "miqtop: start: date time is-> $(date) $(date +%z)" >> ${LOG_FILE}
-TERM=dumb COLUMNS=512 top -b -d 60 >> ${LOG_FILE} 2>&1 &
+TERM=dumb COLUMNS=512 top -c -b -d 60 >> ${LOG_FILE} 2>&1 &
 echo $! >> ${PID_FILE}
