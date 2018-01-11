@@ -10,43 +10,43 @@ cd $BASEDIR
 /usr/bin/generate_miq_server_cert.sh
 
 start() {
-  rake evm:start
+  bundle exec rake evm:start
   RETVAL=$?
   return $RETVAL
 }
 
 stop() {
-  rake evm:stop
+  bundle exec rake evm:stop
   RETVAL=$?
   return $RETVAL
 }
 
 kill() {
-  rake evm:kill
+  bundle exec rake evm:kill
   RETVAL=$?
   return $RETVAL
 }
 
 restart() {
-  rake evm:restart
+  bundle exec rake evm:restart
   RETVAL=$?
   return $RETVAL
 }
 
 status() {
-  rake evm:status
+  bundle exec rake evm:status
   RETVAL=$?
   return $RETVAL
 }
 
 update_start() {
-  rake evm:update_start >> /var/www/miq/vmdb/log/evm.log 2>&1
+  bundle exec rake evm:update_start >> /var/www/miq/vmdb/log/evm.log 2>&1
   RETVAL=$?
   return $RETVAL
 }
 
 update_stop() {
-  rake evm:update_stop >> /var/www/miq/vmdb/log/evm.log 2>&1
+  bundle exec rake evm:update_stop >> /var/www/miq/vmdb/log/evm.log 2>&1
   RETVAL=$?
   return $RETVAL
 }
