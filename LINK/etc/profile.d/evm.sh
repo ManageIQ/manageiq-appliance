@@ -2,6 +2,7 @@
 
 # Aliases:
 alias ap='appliance_console'
+alias apcli='appliance_console_cli'
 alias vmdb='cd /var/www/miq/vmdb'
 alias appliance='[[ -n ${APPLIANCE_SOURCE_DIRECTORY} ]] && cd ${APPLIANCE_SOURCE_DIRECTORY}'
 
