@@ -5,6 +5,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 
 
+## Unreleased as of Sprint 77 ending 2018-01-15
+
+### Added
+- Adding alias apcli for appliance_conosle_cli [(#175)](https://github.com/ManageIQ/manageiq-appliance/pull/175)
+
+### Fixed
+- Update manageiq-appliance_console to minimum v1.2.3 [(#168)](https://github.com/ManageIQ/manageiq-appliance/pull/168)
+- Enable rewrite engine for http and https [(#167)](https://github.com/ManageIQ/manageiq-appliance/pull/167)
+
 ## Unreleased as of Sprint 76 ending 2018-01-01
 
 ### Added
