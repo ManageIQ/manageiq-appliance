@@ -1,9 +1,0 @@
-#!/bin/bash
-
-source /etc/default/evm
-LOGFILE=/var/www/miq/vmdb/log/hourly_continuous_pg_maint_stdout.log
-
-echo "current time is $(date) -> target for reindex is 'miq_queue' table" >> $LOGFILE
-psql -U postgres vmdb_production -a -e -c "REINDEX TABLE miq_queue"  >> $LOGFILE 2>&1
-echo "REINDEX table miq_queue completed at $(date)" >> $LOGFILE
-echo "=================" >> $LOGFILE
