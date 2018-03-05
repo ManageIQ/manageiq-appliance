@@ -5,7 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 
 
-## Gaprindashvili-1
+## Gaprindashvili-2
+
+### Fixed
+- Allow local replication connections [(#178)](https://github.com/ManageIQ/manageiq-appliance/pull/178)
+
+## Gaprindashvili-1 - Released 2018-02-01
 
 ### Added
 - Configure PostgreSQL ssl by default [(#162)](https://github.com/ManageIQ/manageiq-appliance/pull/162)
