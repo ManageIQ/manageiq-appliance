@@ -5,6 +5,24 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 
 
+## Unreleased as of Sprint 84 ending 2018-04-23
+
+### Fixed
+- httpd reload is not needed with copytruncate [(#185)](https://github.com/ManageIQ/manageiq-appliance/pull/185)
+
+## Unreleased as of Sprint 81 ending 2018-03-12
+
+### Added
+- Optimize PostgreSQL Settings for 4x12GB Applaince [(#181)](https://github.com/ManageIQ/manageiq-appliance/pull/181)
+
+### Removed
+- Remove reindex and vacuum scripts [(#180)](https://github.com/ManageIQ/manageiq-appliance/pull/180)
+
+## Gaprindashvili-2 released 2018-03-06
+
+### Fixed
+- Allow local replication connections [(#178)](https://github.com/ManageIQ/manageiq-appliance/pull/178)
+
 ## Gaprindashvili-1 - Released 2018-01-31
 
 ### Added
@@ -23,11 +41,6 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 - Use a login shell for the failover monitor service [(#155)](https://github.com/ManageIQ/manageiq-appliance/pull/155)
 - Add support for the domain user attribute [(#127)](https://github.com/ManageIQ/manageiq-appliance/pull/127)
 - ExecStart requires an absolute executable path [(#151)](https://github.com/ManageIQ/manageiq-appliance/pull/151)
-
-## Unreleased as of Sprint 78 ending 2018-01-29
-
-### Fixed
-- Allow local replication connections [(#178)](https://github.com/ManageIQ/manageiq-appliance/pull/178)
 
 ## Unreleased as of Sprint 77 ending 2018-01-15
 
