@@ -5,7 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 
 
-## Gaprindashvili-2
+## Gaprindashvili-3
+
+### Fixed
+- Use version 2 of appliance console [(#183)](https://github.com/ManageIQ/manageiq-appliance/pull/183)
+- httpd reload is not needed with copytruncate [(#185)](https://github.com/ManageIQ/manageiq-appliance/pull/185)
+
+### Removed
+- Remove reindex and vacuum scripts [(#180)](https://github.com/ManageIQ/manageiq-appliance/pull/180)
+
+## Gaprindashvili-2 - Released 2018-03-07
 
 ### Fixed
 - Allow local replication connections [(#178)](https://github.com/ManageIQ/manageiq-appliance/pull/178)
