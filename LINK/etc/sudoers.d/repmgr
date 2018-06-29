@@ -1,0 +1,2 @@
+Defaults:postgres !requiretty
+postgres ALL = NOPASSWD: /usr/bin/systemctl stop rh-postgresql95-postgresql, /usr/bin/systemctl start rh-postgresql95-postgresql, /usr/bin/systemctl restart rh-postgresql95-postgresql, /usr/bin/systemctl reload rh-postgresql95-postgresql
