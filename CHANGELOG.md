@@ -5,6 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 
 
+## Unreleased as of Sprint 89 ending 2018-07-02
+
+### Added
+- Add .ansible.cfg for ansible-playbook [(#196)](https://github.com/ManageIQ/manageiq-appliance/pull/196)
+
 ## Gaprindashvili-3 released 2018-05-15
 
 ### Fixed
@@ -13,6 +18,11 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 
 ### Removed
 - Remove reindex and vacuum scripts [(#180)](https://github.com/ManageIQ/manageiq-appliance/pull/180)
+
+## Unreleased as of Sprint 84 ending 2018-04-23
+
+### Fixed
+- httpd reload is not needed with copytruncate [(#185)](https://github.com/ManageIQ/manageiq-appliance/pull/185)
 
 ## Unreleased as of Sprint 81 ending 2018-03-12
 
