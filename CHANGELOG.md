@@ -5,6 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 
 
+## Gaprindashvili-4
+
+### Fixed
+- Update the console to version 2.0.3 [(#192)](https://github.com/ManageIQ/manageiq-appliance/pull/192)
+
 ## Gaprindashvili-3
 
 ### Fixed
