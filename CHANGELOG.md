@@ -5,6 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 
 
+## Unreleased as of Sprint 91 ending 2018-07-30
+
+### Added
+- Add support for OpenID-Connect [(#200)](https://github.com/ManageIQ/manageiq-appliance/pull/200)
+
 ## Unreleased as of Sprint 89 ending 2018-07-02
 
 ### Added
