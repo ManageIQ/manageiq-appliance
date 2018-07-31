@@ -5,6 +5,25 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 
 
+## Unreleased as of Sprint 91 ending 2018-07-30
+
+### Added
+- Add support for OpenID-Connect [(#200)](https://github.com/ManageIQ/manageiq-appliance/pull/200)
+
+## Unreleased as of Sprint 89 ending 2018-07-02
+
+### Added
+- Add .ansible.cfg for ansible-playbook [(#196)](https://github.com/ManageIQ/manageiq-appliance/pull/196)
+
+## Gaprindashvili-3 released 2018-05-15
+
+### Fixed
+- Use version 2 of appliance console [(#183)](https://github.com/ManageIQ/manageiq-appliance/pull/183)
+- httpd reload is not needed with copytruncate [(#185)](https://github.com/ManageIQ/manageiq-appliance/pull/185)
+
+### Removed
+- Remove reindex and vacuum scripts [(#180)](https://github.com/ManageIQ/manageiq-appliance/pull/180)
+
 ## Unreleased as of Sprint 84 ending 2018-04-23
 
 ### Fixed
