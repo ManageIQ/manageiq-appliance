@@ -3,7 +3,7 @@ Description=PostgreSQL Failover Monitor for ManageIQ
 After=evmserverd.service
 
 [Service]
-ExecStart=/bin/sh -l -c "bundle exec rails r \"EvmDatabase.run_failover_monitor\""
+ExecStart=/usr/bin/evm-failover-monitor
 Restart=on-failure
 
 [Install]
