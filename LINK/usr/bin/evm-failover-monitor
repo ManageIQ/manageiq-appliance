@@ -1,0 +1,5 @@
+#!/bin/bash
+[[ -s "/etc/default/evm" ]] && source "/etc/default/evm"
+
+cd /var/www/miq/vmdb
+bundle exec rails r "EvmDatabase.run_failover_monitor"
