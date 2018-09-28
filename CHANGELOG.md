@@ -15,13 +15,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 - Adding alias apcli for appliance_conosle_cli [(#175)](https://github.com/ManageIQ/manageiq-appliance/pull/175)
 
 ### Fixed
-- httpd reload is not needed with copytruncate [(#185)](https://github.com/ManageIQ/manageiq-appliance/pull/185)
-- Update manageiq-appliance_console to minimum v1.2.3 [(#168)](https://github.com/ManageIQ/manageiq-appliance/pull/168)
 - Enable rewrite engine for http and https [(#167)](https://github.com/ManageIQ/manageiq-appliance/pull/167)
 - Add trailing slash to cockpit machine urls [(#148)](https://github.com/ManageIQ/manageiq-appliance/pull/148)
-
-### Removed
-- Remove reindex and vacuum scripts [(#180)](https://github.com/ManageIQ/manageiq-appliance/pull/180)
 
 ## Gaprindashvili-3 released 2018-05-15
 
@@ -55,7 +50,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 - Use a login shell for the failover monitor service [(#155)](https://github.com/ManageIQ/manageiq-appliance/pull/155)
 - Add support for the domain user attribute [(#127)](https://github.com/ManageIQ/manageiq-appliance/pull/127)
 - ExecStart requires an absolute executable path [(#151)](https://github.com/ManageIQ/manageiq-appliance/pull/151)
-
+- Update manageiq-appliance_console to minimum v1.2.3 [(#168)](https://github.com/ManageIQ/manageiq-appliance/pull/168)
 ## Fine-1
 
 ### Fixed
