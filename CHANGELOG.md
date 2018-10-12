@@ -13,10 +13,12 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 - Add .ansible.cfg for ansible-playbook [(#196)](https://github.com/ManageIQ/manageiq-appliance/pull/196)
 - Optimize PostgreSQL Settings for 4x12GB Applaince [(#181)](https://github.com/ManageIQ/manageiq-appliance/pull/181)
 - Adding alias apcli for appliance_conosle_cli [(#175)](https://github.com/ManageIQ/manageiq-appliance/pull/175)
+- Move from apache module mod_auth_kerb to mod_auth_gssapi [(#206)](https://github.com/ManageIQ/manageiq-appliance/pull/206)
 
 ### Fixed
 - Enable rewrite engine for http and https [(#167)](https://github.com/ManageIQ/manageiq-appliance/pull/167)
 - Add trailing slash to cockpit machine urls [(#148)](https://github.com/ManageIQ/manageiq-appliance/pull/148)
+- Add max-time to curl commands [(#209)](https://github.com/ManageIQ/manageiq-appliance/pull/209)
 
 ## Gaprindashvili-3 released 2018-05-15
 
