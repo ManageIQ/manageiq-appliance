@@ -78,7 +78,7 @@ module EvmWatchdog
 
   def self.log_info(message)
     File.open('/var/www/miq/vmdb/log/evm.log', 'a') do |f|
-      f.puts "[----] I, [#{Time.now.utc.iso8601(6)} ##{Process.pid}:#{Thread.current.object_id.to_s(16)}]  INFO -- : EvmWatchdog - #{message}"
+      f.puts "[----] I, [#{Time.now.strftime("%Y-%m-%dT%H:%M:%S.%6N".freeze)} ##{Process.pid}:#{Thread.current.object_id.to_s(16)}]  INFO -- : EvmWatchdog - #{message}"
     end
   end
 
