@@ -5,28 +5,20 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 
 
-## Unreleased as of Sprint 96 ending 2018-10-08
-
-### Added
-- Move from apache module mod_auth_kerb to mod_auth_gssapi [(#206)](https://github.com/ManageIQ/manageiq-appliance/pull/206)
-
-### Fixed
-- Add max-time to curl commands [(#209)](https://github.com/ManageIQ/manageiq-appliance/pull/209)
-
-## Unreleased as of Sprint 94 ending 2018-09-10
+## Hammer Beta-1 - Released 2018-10-12
 
 ### Added
 - Use the EvmDatabase method for evm-failover-monitor ExecStart [(#202)](https://github.com/ManageIQ/manageiq-appliance/pull/202)
-
-## Unreleased as of Sprint 91 ending 2018-07-30
-
-### Added
 - Add support for OpenID-Connect [(#200)](https://github.com/ManageIQ/manageiq-appliance/pull/200)
-
-## Unreleased as of Sprint 89 ending 2018-07-02
-
-### Added
 - Add .ansible.cfg for ansible-playbook [(#196)](https://github.com/ManageIQ/manageiq-appliance/pull/196)
+- Optimize PostgreSQL Settings for 4x12GB Applaince [(#181)](https://github.com/ManageIQ/manageiq-appliance/pull/181)
+- Adding alias apcli for appliance_conosle_cli [(#175)](https://github.com/ManageIQ/manageiq-appliance/pull/175)
+- Move from apache module mod_auth_kerb to mod_auth_gssapi [(#206)](https://github.com/ManageIQ/manageiq-appliance/pull/206)
+
+### Fixed
+- Enable rewrite engine for http and https [(#167)](https://github.com/ManageIQ/manageiq-appliance/pull/167)
+- Add trailing slash to cockpit machine urls [(#148)](https://github.com/ManageIQ/manageiq-appliance/pull/148)
+- Add max-time to curl commands [(#209)](https://github.com/ManageIQ/manageiq-appliance/pull/209)
 
 ## Gaprindashvili-3 released 2018-05-15
 
@@ -36,11 +28,6 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 
 ### Removed
 - Remove reindex and vacuum scripts [(#180)](https://github.com/ManageIQ/manageiq-appliance/pull/180)
-
-## Unreleased as of Sprint 81 ending 2018-03-12
-
-### Added
-- Optimize PostgreSQL Settings for 4x12GB Applaince [(#181)](https://github.com/ManageIQ/manageiq-appliance/pull/181)
 
 ## Gaprindashvili-2 released 2018-03-06
 
@@ -65,20 +52,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 - Use a login shell for the failover monitor service [(#155)](https://github.com/ManageIQ/manageiq-appliance/pull/155)
 - Add support for the domain user attribute [(#127)](https://github.com/ManageIQ/manageiq-appliance/pull/127)
 - ExecStart requires an absolute executable path [(#151)](https://github.com/ManageIQ/manageiq-appliance/pull/151)
-
-## Unreleased as of Sprint 77 ending 2018-01-15
-
-### Added
-- Adding alias apcli for appliance_conosle_cli [(#175)](https://github.com/ManageIQ/manageiq-appliance/pull/175)
-
-### Fixed
 - Update manageiq-appliance_console to minimum v1.2.3 [(#168)](https://github.com/ManageIQ/manageiq-appliance/pull/168)
-- Enable rewrite engine for http and https [(#167)](https://github.com/ManageIQ/manageiq-appliance/pull/167)
-
-## Unreleased as of Sprint 74 ending 2017-11-27
-
-### Fixed
-- Add trailing slash to cockpit machine urls [(#148)](https://github.com/ManageIQ/manageiq-appliance/pull/148)
 
 ## Fine-1
 
