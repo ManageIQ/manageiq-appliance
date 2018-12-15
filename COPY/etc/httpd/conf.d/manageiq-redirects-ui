@@ -9,3 +9,5 @@ RewriteCond %{REQUEST_URI} !^/ansibleapi
 RewriteCond %{DOCUMENT_ROOT}/%{REQUEST_FILENAME} !-f
 RewriteRule ^/ balancer://evmcluster_ui%{REQUEST_URI} [P,QSA,L]
 ProxyPassReverse / balancer://evmcluster_ui/
+ProxyPass /ws/notifications balancer://evmcluster_ui_ws/ws/notifications
+ProxyPassReverse /ws/notifications balancer://evmcluster_ui_ws/ws/notifications
