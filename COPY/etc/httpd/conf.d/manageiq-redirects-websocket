@@ -1,2 +1,2 @@
-ProxyPass /ws balancer://evmcluster_websocket/ws
-ProxyPassReverse /ws balancer://evmcluster_websocket/ws
+ProxyPass /ws/console balancer://evmcluster_websocket/ws/console
+ProxyPassReverse /ws/console balancer://evmcluster_websocket/ws/console
