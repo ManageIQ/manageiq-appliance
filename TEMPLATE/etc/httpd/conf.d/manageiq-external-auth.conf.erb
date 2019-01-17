@@ -38,6 +38,7 @@ LoadModule lookup_identity_module modules/mod_lookup_identity.so
   SetEnvIf Authorization '^Basic +YWRtaW46' let_admin_in
   SetEnvIf X-Auth-Token  '^.+$'             let_api_token_in
   SetEnvIf X-MIQ-Token   '^.+$'             let_sys_token_in
+  SetEnvIf X-CSRF-Token  '^.+$'             let_csrf_token_in
 
   AuthType Basic
   AuthName "External Authentication (httpd) for API"
@@ -49,6 +50,7 @@ LoadModule lookup_identity_module modules/mod_lookup_identity.so
   Allow from env=let_admin_in
   Allow from env=let_api_token_in
   Allow from env=let_sys_token_in
+  Allow from env=let_csrf_token_in
   Satisfy Any
 
   LookupUserAttr mail        REMOTE_USER_EMAIL
