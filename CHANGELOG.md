@@ -5,6 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 
 
+## Unreleased as of Sprint 103 ending 2019-01-21
+
+### Added
+- Let API requests go through apache if they contain a CSRF token [(#224)](https://github.com/ManageIQ/manageiq-appliance/pull/224)
+
 ## Unreleased as of Sprint 102 ending 2019-01-07
 
 ### Added
