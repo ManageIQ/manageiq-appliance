@@ -5,6 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 
 
+## Unreleased as of Sprint 107 ending 2019-03-18
+
+### Added
+- Update to PG 10 [(#228)](https://github.com/ManageIQ/manageiq-appliance/pull/228)
+
 ## Unreleased as of Sprint 103 ending 2019-01-21
 
 ### Added
