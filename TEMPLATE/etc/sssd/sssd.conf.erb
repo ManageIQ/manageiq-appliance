@@ -1,0 +1,35 @@
+[domain/default]
+
+autofs_provider = ldap
+ldap_schema = rfc2307bis
+ldap_search_base = <%= ldapbasedn %>
+id_provider = ldap
+auth_provider = ldap
+chpass_provider = ldap
+ldap_uri = <%= ldapserver %>
+ldap_id_use_start_tls = False
+cache_credentials = True
+ldap_tls_cacertdir = /etc/openldap/cacerts
+[sssd]
+services = nss, pam, autofs
+
+domains = default
+[nss]
+homedir_substring = /home
+
+[pam]
+
+[sudo]
+
+[autofs]
+
+[ssh]
+
+[pac]
+
+[ifp]
+
+[secrets]
+
+[session_recording]
+
