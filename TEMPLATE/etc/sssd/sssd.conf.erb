@@ -2,11 +2,11 @@
 
 autofs_provider = ldap
 ldap_schema = rfc2307bis
-ldap_search_base = <%= ldapbasedn %>
+ldap_search_base = <%= ldap_search_base %>
 id_provider = ldap
 auth_provider = ldap
 chpass_provider = ldap
-ldap_uri = <%= ldapserver %>
+ldap_uri = <%= ldap_uri %>
 ldap_id_use_start_tls = False
 cache_credentials = True
 ldap_tls_cacertdir = /etc/openldap/cacerts
