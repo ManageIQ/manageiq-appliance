@@ -5,6 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 
 
+## Unreleased as of Sprint 112 ending 2019-05-27
+
+### Added
+- Alter postgres conf for built in logical replication [(#236)](https://github.com/ManageIQ/manageiq-appliance/pull/236)
+
 ## Unreleased as of Sprint 107 ending 2019-03-18
 
 ### Added
