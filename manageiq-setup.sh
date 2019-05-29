@@ -30,13 +30,6 @@ EOF
 [ -x /sbin/restorecon ] && /sbin/restorecon -R -v "/var/www/miq/vmdb/config/cockpit"
 [ -x /sbin/restorecon ] && /sbin/restorecon -R -v /usr/bin
 
-# Relabel cockpit executables to run in the same contexts
-# as the rest of the miq workers
-/usr/sbin/semanage fcontext -a -t usr_t /usr/libexec/cockpit-ws
-/usr/sbin/semanage fcontext -a -t usr_t /usr/libexec/cockpit-ssh
-[ -x /sbin/restorecon ] && /sbin/restorecon -v /usr/libexec/cockpit-ws
-[ -x /sbin/restorecon ] && /sbin/restorecon -v /usr/libexec/cockpit-ssh
-
 # relabel the pg_log directory in postgresql datadir, but defer restorecon
 # until after the database is initialized during firstboot configuration
 /usr/sbin/semanage fcontext -a -t var_log_t "${APPLIANCE_PG_DATA}/pg_log(/.*)?"
