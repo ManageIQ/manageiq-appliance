@@ -5,6 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 
 
+## Unreleased as of Sprint 113 ending 2019-06-10
+
+### Added
+- Remove selinux changes to cockpit-ws and cockpit-ssh [(#239)](https://github.com/ManageIQ/manageiq-appliance/pull/239)
+
 ## Unreleased as of Sprint 112 ending 2019-05-27
 
 ### Added
@@ -25,7 +30,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 ### Added
 - Detach actioncable from the WebsocketServer and run it with the UI [(#219)](https://github.com/ManageIQ/manageiq-appliance/pull/219)
 
-## Hammer-1
+## Hammer-1 - Released 2019-01-15
 
 ### Added
 - Use the EvmDatabase method for evm-failover-monitor ExecStart [(#202)](https://github.com/ManageIQ/manageiq-appliance/pull/202)
