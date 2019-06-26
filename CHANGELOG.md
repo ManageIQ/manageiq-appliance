@@ -5,6 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 
 
+## Unreleased as of Sprint 114 ending 2019-06-24
+
+### Added
+- Add the vmdb/content/ansible/roles directory to the role search path [(#240)](https://github.com/ManageIQ/manageiq-appliance/pull/240)
+
 ## Unreleased as of Sprint 113 ending 2019-06-10
 
 ### Added
