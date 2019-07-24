@@ -5,34 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 
 
-## Unreleased as of Sprint 114 ending 2019-06-24
+## Ivanchuk Beta1
 
 ### Added
 - Add the vmdb/content/ansible/roles directory to the role search path [(#240)](https://github.com/ManageIQ/manageiq-appliance/pull/240)
-
-## Unreleased as of Sprint 113 ending 2019-06-10
-
-### Added
 - Remove selinux changes to cockpit-ws and cockpit-ssh [(#239)](https://github.com/ManageIQ/manageiq-appliance/pull/239)
-
-## Unreleased as of Sprint 112 ending 2019-05-27
-
-### Added
 - Alter postgres conf for built in logical replication [(#236)](https://github.com/ManageIQ/manageiq-appliance/pull/236)
-
-## Unreleased as of Sprint 107 ending 2019-03-18
-
-### Added
 - Update to PG 10 [(#228)](https://github.com/ManageIQ/manageiq-appliance/pull/228)
-
-## Unreleased as of Sprint 103 ending 2019-01-21
-
-### Added
 - Let API requests go through apache if they contain a CSRF token [(#224)](https://github.com/ManageIQ/manageiq-appliance/pull/224)
-
-## Unreleased as of Sprint 102 ending 2019-01-07
-
-### Added
 - Detach actioncable from the WebsocketServer and run it with the UI [(#219)](https://github.com/ManageIQ/manageiq-appliance/pull/219)
 
 ## Hammer-1 - Released 2019-01-15
