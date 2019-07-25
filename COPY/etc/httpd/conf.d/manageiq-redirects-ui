@@ -1,4 +1,4 @@
-RewriteRule ^/ui/service(?!/(assets|images|img|styles|js|fonts|vendor|gettext)) /ui/service/index.html [L]
+RewriteRule ^/ui/service(?!/(assets|images|img|styles|js|fonts|vendor|gettext|console)) /ui/service/index.html [L]
 RewriteRule ^/self_service(.*) /ui/service$1 [R]
 RewriteCond %{REQUEST_URI} !^/cws
 RewriteCond %{REQUEST_URI} !^/ws
