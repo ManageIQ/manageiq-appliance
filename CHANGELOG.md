@@ -5,12 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 
 
-## Unreleased as of Sprint 117 - 2019-08-05
+## Ivanchuk-Beta2
 
 ### Fixed
 - Do not forward /ui/service/console to the sui index.html [(#248)](https://github.com/ManageIQ/manageiq-appliance/pull/248)
 
-## Ivanchuk Beta1 - Released 2019-07-29
+## Ivanchuk-Beta1 - Released 2019-07-29
 
 ### Added
 - Add the vmdb/content/ansible/roles directory to the role search path [(#240)](https://github.com/ManageIQ/manageiq-appliance/pull/240)
