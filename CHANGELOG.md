@@ -5,7 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 
 
-## Ivanchuk-Beta2
+## Unreleased as of Sprint 118 - 2019-08-19
+
+### Added
+- Append RBAC features for VMRC console request through the API [(#642)](https://github.com/ManageIQ/manageiq-api/pull/642)
+
+## Ivanchuk-Beta2 - Released 2019-08-14
 
 ### Fixed
 - Do not forward /ui/service/console to the sui index.html [(#248)](https://github.com/ManageIQ/manageiq-appliance/pull/248)
