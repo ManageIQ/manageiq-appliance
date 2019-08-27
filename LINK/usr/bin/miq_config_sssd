@@ -1,0 +1,5 @@
+#!/bin/bash
+# description: ManageIQ miqldap_to_sssd launcher for a fresh configuration
+
+cd /var/www/miq/vmdb
+bundle exec ruby tools/miqldap_to_sssd.rb config $@

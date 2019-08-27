@@ -1,5 +1,5 @@
 #!/bin/bash
-# description: ManageIQ miqldap_to_sssd launcher
+# description: ManageIQ miqldap_to_sssd launcher for a conversion from MiqLdap
 
 cd /var/www/miq/vmdb
-bundle exec ruby tools/miqldap_to_sssd.rb "$@"
+bundle exec ruby tools/miqldap_to_sssd.rb convert $@
