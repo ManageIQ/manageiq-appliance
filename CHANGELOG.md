@@ -5,12 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 
 
-## Ivanchuk-Beta2
-
-### Fixed
-- Do not forward /ui/service/console to the sui index.html [(#248)](https://github.com/ManageIQ/manageiq-appliance/pull/248)
-
-## Ivanchuk-Beta1 - Released 2019-07-29
+## Ivanchuk-1
 
 ### Added
 - Add the vmdb/content/ansible/roles directory to the role search path [(#240)](https://github.com/ManageIQ/manageiq-appliance/pull/240)
@@ -19,6 +14,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 - Update to PG 10 [(#228)](https://github.com/ManageIQ/manageiq-appliance/pull/228)
 - Let API requests go through apache if they contain a CSRF token [(#224)](https://github.com/ManageIQ/manageiq-appliance/pull/224)
 - Detach actioncable from the WebsocketServer and run it with the UI [(#219)](https://github.com/ManageIQ/manageiq-appliance/pull/219)
+
+### Fixed
+- Do not forward /ui/service/console to the sui index.html [(#248)](https://github.com/ManageIQ/manageiq-appliance/pull/248)
 
 ## Hammer-1 - Released 2019-01-15
 
