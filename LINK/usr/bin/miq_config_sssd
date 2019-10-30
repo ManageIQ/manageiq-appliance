@@ -1,0 +1,5 @@
+#!/bin/bash
+# description: ManageIQ miq_config_sssd_ldap launcher for a fresh configuration
+
+cd /var/www/miq/vmdb
+bundle exec ruby tools/miq_config_sssd_ldap.rb config $@
