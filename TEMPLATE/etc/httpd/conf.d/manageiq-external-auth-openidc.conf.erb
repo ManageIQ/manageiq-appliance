@@ -1,0 +1,16 @@
+LoadModule auth_openidc_module modules/mod_auth_openidc.so
+ServerName https://<%= miq_appliance %>
+LogLevel   warn
+
+OIDCProviderMetadataURL  <%= oidc_provider_metadata_url %>
+OIDCCLientID             <%= oidc_client_id %>
+OIDCClientSecret         <%= oidc_client_secret %>
+OIDCRedirectURI          https://<%= miq_appliance %>/oidc_login/redirect_uri
+OIDCCryptoPassphrase     sp-cookie
+OIDCOAuthRemoteUserClaim username
+
+<Location /oidc_login>
+  AuthType  openid-connect
+  Require   valid-user
+</Location>
+
