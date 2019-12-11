@@ -21,7 +21,7 @@ EOF
 /usr/sbin/semanage fcontext -a -t httpd_log_t "/var/www/miq/vmdb/log(/.*)?"
 /usr/sbin/semanage fcontext -a -t cert_t "/var/www/miq/vmdb/certs(/.*)?"
 /usr/sbin/semanage fcontext -a -t logrotate_exec_t ${APPLIANCE_SOURCE_DIRECTORY}/logrotate_free_space_check.sh
-/usr/sbin/semanage fcontext -a -t etc_t "/var/www/miq/vmdb/config/cockpit"
+/usr/sbin/semanage fcontext -a -t etc_t "/var/www/miq/vmdb/config/cockpit(/.*)?"
 
 cat <<'EOF' > /tmp/cockpit_ws_miq.te
 module cockpit_ws_miq 1.0;
