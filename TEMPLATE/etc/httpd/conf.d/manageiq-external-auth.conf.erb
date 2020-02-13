@@ -37,7 +37,7 @@ LoadModule auth_kerb_module modules/mod_auth_kerb.so
 </LocationMatch>
 
 
-<LocationMatch ^/api|^/vmdbws/wsdl|^/vmdbws/api>
+<LocationMatch ^/api(?!\/product_info$)|^/vmdbws/wsdl|^/vmdbws/api>
   SetEnvIf Authorization '^Basic +YWRtaW46' let_admin_in
   SetEnvIf X-Auth-Token  '^.+$'             let_api_token_in
   SetEnvIf X-MIQ-Token   '^.+$'             let_sys_token_in
