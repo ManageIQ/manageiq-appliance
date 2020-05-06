@@ -8,8 +8,8 @@ OIDCClientSecret                   <%= oidc_client_secret %>
 OIDCRedirectURI                    https://<%= miq_appliance %>/oidc_login/redirect_uri
 OIDCCryptoPassphrase               sp-cookie
 OIDCOAuthRemoteUserClaim           username
-OIDCOAuthClientID                  <%= oidc_oauth_client_id %>
-OIDCOAuthClientSecret              <%= oidc_oauth_client_secret %>
+OIDCOAuthClientID                  <%= oidc_client_id %>
+OIDCOAuthClientSecret              <%= oidc_client_secret %>
 OIDCOAuthIntrospectionEndpoint     <%= oidc_oauth_introspection_endpoint %>
 OIDCOAuthIntrospectionEndpointAuth client_secret_post
 
