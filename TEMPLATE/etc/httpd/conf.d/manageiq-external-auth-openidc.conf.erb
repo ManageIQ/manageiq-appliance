@@ -11,7 +11,7 @@ OIDCOAuthRemoteUserClaim           username
 OIDCOAuthClientID                  <%= oidc_client_id %>
 OIDCOAuthClientSecret              <%= oidc_client_secret %>
 OIDCOAuthIntrospectionEndpoint     <%= oidc_oauth_introspection_endpoint %>
-OIDCOAuthIntrospectionEndpointAuth client_secret_post
+OIDCOAuthIntrospectionEndpointAuth client_secret_basic
 
 <Location /oidc_login>
   AuthType  openid-connect
@@ -25,7 +25,7 @@ OIDCOAuthIntrospectionEndpointAuth client_secret_post
   SetEnvIf X-CSRF-Token  '^.+$'                 let_csrf_token_in
 
   AuthType     oauth20
-  AuthName     "External Authentication (oauth20) for API"
+  AuthName     "External Authentication (oidc) for API"
 
   Require   valid-user
   Order          Allow,Deny
