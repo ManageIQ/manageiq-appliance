@@ -18,6 +18,11 @@ OIDCOAuthIntrospectionEndpointAuth client_secret_basic
   Require   valid-user
 </Location>
 
+<LocationMatch ^/ui/service.*$>
+  AuthType  openid-connect
+  Require   valid-user
+</LocationMatch>
+
 <LocationMatch ^/api(?!\/(v[\d\.]+\/)?product_info$)>
   SetEnvIf Authorization '^Basic +YWRtaW46'     let_admin_in
   SetEnvIf X-Auth-Token  '^.+$'                 let_api_token_in
