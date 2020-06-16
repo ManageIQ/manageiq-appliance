@@ -1,0 +1,9 @@
+# Default config (insecure)
+ProxyPreserveHost on
+
+# To make the appliance more secure and prevent Host Header Injection attacks,
+# uncomment the following and change APPLIANCE_HOSTNAME to use the hostname
+# address that the appliance is running on.
+#
+# RequestHeader set Host APPLIANCE_HOSTNAME
+# RequestHeader set X-Forwarded-Host APPLIANCE_HOSTNAME
