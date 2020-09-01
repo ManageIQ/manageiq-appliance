@@ -1,3 +1,5 @@
+#!/bin/bash
+
 [[ -s "/etc/default/evm" ]] && source "/etc/default/evm"
 
 # Aliases:
