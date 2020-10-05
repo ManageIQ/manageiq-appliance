@@ -13,7 +13,6 @@ export MALLOC_ARENA_MAX=1
 export KEY_ROOT=/var/www/miq/vmdb/certs
 
 [[ -s /etc/default/evm_ruby ]] && source /etc/default/evm_ruby
-[[ -s /etc/default/evm_bundler ]] && source /etc/default/evm_bundler
 [[ -s /etc/default/evm_postgres ]] && source /etc/default/evm_postgres
 source /etc/default/evm_production
 
