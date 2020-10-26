@@ -1,6 +1,6 @@
 # ManageIQ Appliance
 
-[![Build Status](https://travis-ci.com/ManageIQ/manageiq-appliance.svg?branch=master)](https://travis-ci.com/ManageIQ/manageiq-appliance)
+[![Build Status](https://travis-ci.com/ManageIQ/manageiq-appliance.svg?branch=kasparov)](https://travis-ci.com/ManageIQ/manageiq-appliance)
 
 System files for the [ManageIQ](http://github.com/manageiq/manageiq) appliance.
 
