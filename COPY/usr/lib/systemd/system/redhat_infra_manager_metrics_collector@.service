@@ -1,0 +1,11 @@
+[Unit]
+PartOf=redhat_infra_manager_metrics_collector.target
+[Install]
+WantedBy=redhat_infra_manager_metrics_collector.target
+[Service]
+WorkingDirectory=/home/grare/adam/src/manageiq/manageiq
+Environment=BUNDLER_GROUPS=manageiq_default,ui_dependencies
+ExecStart=/bin/bash -lc 'exec ruby lib/workers/bin/run_single_worker.rb ManageIQ::Providers::Redhat::InfraManager::MetricsCollectorWorker --heartbeat --guid=%i'
+Restart=no
+Type=notify
+Slice=miq-redhat_infra_manager_metrics_collector.slice
