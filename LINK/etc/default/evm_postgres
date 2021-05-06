@@ -1,9 +1,0 @@
-#!/bin/bash
-# Description: Sets the PostgreSQL environment for scripts and console users
-#
-
-export APPLIANCE_PG_CTL=/usr/bin/pg_ctl
-export APPLIANCE_PG_MOUNT_POINT=/var/lib/pgsql
-export APPLIANCE_PG_DATA=${APPLIANCE_PG_MOUNT_POINT}/data
-export APPLIANCE_PG_SERVICE=postgresql
-export APPLIANCE_PG_PACKAGE_NAME=postgresql-server
