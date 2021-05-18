@@ -40,13 +40,13 @@ status() {
 }
 
 update_start() {
-  bundle exec rake evm:update_start >> /var/www/miq/vmdb/log/evm.log 2>&1
+  bundle exec rake evm:update_start
   RETVAL=$?
   return $RETVAL
 }
 
 update_stop() {
-  bundle exec rake evm:update_stop >> /var/www/miq/vmdb/log/evm.log 2>&1
+  bundle exec rake evm:update_stop
   RETVAL=$?
   return $RETVAL
 }
