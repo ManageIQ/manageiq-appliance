@@ -1,0 +1,12 @@
+[Unit]
+Description=Initialize Appliance Database
+ConditionPathExists=!/var/lib/pgsql/data/base
+After=evminit.service memcached.service
+Before=evmserverd.service
+Requires=memcached.service
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/manageiq-initialize.sh
+ExecStartPost=/usr/bin/systemctl disable manageiq-initialize
+[Install]
+WantedBy=multi-user.target
