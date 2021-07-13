@@ -3,7 +3,8 @@ Description=evm watchdog process
 After=evmserverd.service
 
 [Service]
-ExecStart=/bin/evm_watchdog
+EnvironmentFile=/etc/default/manageiq*.properties
+ExecStart=/usr/bin/ruby /usr/bin/evm_watchdog.rb
 Restart=on-failure
 
 [Install]
