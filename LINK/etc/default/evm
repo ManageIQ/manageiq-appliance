@@ -12,6 +12,10 @@ export MALLOC_ARENA_MAX=1
 # Location of certificates and provider keys
 export KEY_ROOT=/var/www/miq/vmdb/certs
 
+# Ansible global variables
+export ANSIBLE_LOCAL_TEMP=/tmp/.ansible_local_tmp
+export ANSIBLE_REMOTE_TEMP=/tmp/.ansible_remote_tmp
+
 [[ -s /etc/default/evm_ruby ]] && source /etc/default/evm_ruby
 [[ -s /etc/default/evm_postgres ]] && source /etc/default/evm_postgres
 source /etc/default/evm_production
