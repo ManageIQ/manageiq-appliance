@@ -70,6 +70,3 @@ semodule -i /tmp/cockpit_ws_miq.pp
 # will remove this once app is no longer running as root
 /usr/sbin/semanage fcontext -a -t user_home_dir_t "/root(/)?"
 /sbin/restorecon /root
-
-# ActionCable configuration
-cp /var/www/miq/vmdb/config/cable.yml.sample /var/www/miq/vmdb/config/cable.yml
