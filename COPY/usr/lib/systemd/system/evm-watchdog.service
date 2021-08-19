@@ -1,6 +1,6 @@
 [Unit]
 Description=evm watchdog process
-After=evmserverd.service
+After=manageiq.service
 
 [Service]
 EnvironmentFile=/etc/default/manageiq*.properties

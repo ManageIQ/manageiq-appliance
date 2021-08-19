@@ -1,6 +1,6 @@
 [Unit]
 Description=PostgreSQL Failover Monitor for ManageIQ
-After=evmserverd.service
+After=manageiq.service
 
 [Service]
 ExecStart=/usr/bin/evm-failover-monitor

@@ -9,10 +9,10 @@ module EvmWatchdog
     pid_file = read_pid_file(PID_LOCATION)
     pid_ps = get_ps_pids('MIQ Server')
     if pid_file.nil?
-      # EVM exited gracefully - no pid file, nothing to do.
-      # Future TODO - Check database to see if EVM should be started?
+      # manageiq exited gracefully - no pid file, nothing to do.
+      # Future TODO - Check database to see if manageiq should be started?
     elsif pid_file.empty? # Not really sure how we got an empty pid file, but we'll just log it for now.
-      log_info("Detected an empty PID file for EVM Server Process.")
+      log_info("Detected an empty PID file for ManageIQ Server Process.")
     elsif pid_file.include? "no_db"
       db_state = get_db_state # TODO: - This is here because it is costly.  Should be moved up when not as costly.
       if db_state.empty?
@@ -24,13 +24,13 @@ module EvmWatchdog
     elsif pid_file.to_i == 0
       log_info("Detected non-numeric PID file contents: #{pid_file}")
     elsif pid_ps.include?(pid_file.to_i)
-      # If the list of pids in ps includes the pid in the file, EVM is running normally
+      # If the list of pids in ps includes the pid in the file, manageiq is running normally
     else
       db_state = get_db_state # TODO: - See note above.
       if db_state.empty?
         log_info("Detected that the database is down.")
       elsif ["started", "starting"].include?(db_state)
-        log_info("Detected that the EVM Server with PID [#{pid_file.to_i}] is no longer running.")
+        log_info("Detected that the ManageIQ Server with PID [#{pid_file.to_i}] is no longer running.")
         start_evm
       else # Not sure why we have a pid file here, maybe we should remove it?
         log_info("Detected a PID file: [#{pid_file}], but server state should be: [#{db_state}]...")
@@ -64,8 +64,8 @@ module EvmWatchdog
   end
 
   def self.start_evm
-    log_info("Starting EVM server...")
-    `systemctl start evmserverd`
+    log_info("Starting ManageIQ server...")
+    `systemctl start manageiq`
   end
 
   def self.log_info(message)

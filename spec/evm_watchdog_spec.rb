@@ -16,7 +16,7 @@ describe EvmWatchdog do
   end
 
   context ".check_evm" do
-    it "No Pid File. (EVM normal stopped state)" do
+    it "No Pid File. (ManageIQ normal stopped state)" do
       allow(described_class).to receive_messages(:read_pid_file => nil, :get_ps_pids => nil)
       described_class.check_evm
     end
@@ -45,7 +45,7 @@ describe EvmWatchdog do
       described_class.check_evm
     end
 
-    it "Pid running. (EVM normal running state)" do
+    it "Pid running. (ManageIQ normal running state)" do
       allow(described_class).to receive_messages(:read_pid_file => "12345", :get_ps_pids => [42, 12345, 9876])
       described_class.check_evm
     end

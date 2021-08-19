@@ -2,7 +2,7 @@
 Description=Initialize Appliance Database
 ConditionPathExists=!/var/lib/pgsql/data/base
 After=evminit.service memcached.service
-Before=evmserverd.service
+Before=manageiq.service
 Requires=memcached.service
 [Service]
 Type=oneshot
