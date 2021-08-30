@@ -21,44 +21,14 @@ EOF
 /usr/sbin/semanage fcontext -a -t httpd_log_t "/var/www/miq/vmdb/log(/.*)?"
 /usr/sbin/semanage fcontext -a -t cert_t "/var/www/miq/vmdb/certs(/.*)?"
 /usr/sbin/semanage fcontext -a -t logrotate_exec_t ${APPLIANCE_SOURCE_DIRECTORY}/logrotate_free_space_check.sh
-/usr/sbin/semanage fcontext -a -t etc_t "/var/www/miq/vmdb/config/cockpit(/.*)?"
 
-cat <<'EOF' > /tmp/cockpit_ws_miq.te
-module cockpit_ws_miq 1.0;
-
-require {
-        type unreserved_port_t;
-        type cockpit_session_t;
-        type httpd_sys_content_t;
-        type initrc_t;
-        type cockpit_ws_t;
-        type initrc_tmp_t;
-        class tcp_socket name_bind;
-        class sock_file write;
-        class unix_stream_socket connectto;
-        class dir search;
-}
-
-#============= cockpit_session_t ==============
-allow cockpit_session_t httpd_sys_content_t:dir search;
-
-#============= cockpit_ws_t ==============
-allow cockpit_ws_t initrc_t:unix_stream_socket connectto;
-allow cockpit_ws_t initrc_tmp_t:sock_file write;
-
-#!!!! This avc can be allowed using the boolean 'nis_enabled'
-allow cockpit_ws_t unreserved_port_t:tcp_socket name_bind;
-EOF
-
-checkmodule -M -m -o /tmp/cockpit_ws_miq.mod /tmp/cockpit_ws_miq.te
-semodule_package -o /tmp/cockpit_ws_miq.pp -m /tmp/cockpit_ws_miq.mod
-semodule -i /tmp/cockpit_ws_miq.pp
+# remove previously installed miq cockpit_ws modules
+semodule -r cockpit_ws_miq || true
 
 [ -x /sbin/restorecon ] && /sbin/restorecon -R -v /var/www/miq/vmdb/log
 [ -x /sbin/restorecon ] && /sbin/restorecon -R -v /etc/sysconfig
 [ -x /sbin/restorecon ] && /sbin/restorecon -R -v /var/www/miq/vmdb/certs
 [ -x /sbin/restorecon ] && /sbin/restorecon -R -v ${APPLIANCE_SOURCE_DIRECTORY}/logrotate_free_space_check.sh
-[ -x /sbin/restorecon ] && /sbin/restorecon -R -v "/var/www/miq/vmdb/config/cockpit"
 [ -x /sbin/restorecon ] && /sbin/restorecon -R -v /usr/bin
 
 # relabel the pg_log directory in postgresql datadir, but defer restorecon
