@@ -27,10 +27,8 @@ def wait_for_vmdb(db_yaml, env = "production")
   host, port, dbname, password = db_yaml[env].values_at("host", "port", "database", "password")
   password = ManageIQ::Password.decrypt(password)
 
-  my_guid = File.read("/var/www/miq/vmdb/GUID")
-
   loop do
-    results = `PGPASSWORD=#{password} psql --host=#{host} --port=#{port || 5432} --dbname=#{dbname} --command="SELECT id FROM miq_servers WHERE guid='#{my_guid}'"`
+    results = `PGPASSWORD=#{password} psql --host=#{host} --port=#{port || 5432} --dbname=#{dbname} --command="SELECT FROM miq_regions LIMIT 1"`
     break if $?.success? && results.include?("(1 row)")
 
     puts "VMDB not ready yet"
