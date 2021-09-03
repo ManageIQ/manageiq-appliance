@@ -1,0 +1,13 @@
+[Unit]
+Description=VMDB Up
+After=network.target
+Before=evmserverd.service
+ConditionPathExists=/var/www/miq/vmdb/config/database.yml
+
+[Service]
+ExecStart=/usr/bin/vmdb-up
+TimeoutStartSec=infinity
+Type=oneshot
+
+[Install]
+WantedBy=multi-user.target

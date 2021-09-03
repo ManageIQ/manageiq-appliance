@@ -1,0 +1,40 @@
+#!/usr/bin/env ruby
+
+require "yaml"
+require "sd_notify"
+
+$stdout.sync = true
+
+def wait_for_service(host, port)
+  loop do
+    `ncat #{host} #{port} </dev/null 2>/dev/null`
+    break if $?.success?
+
+    puts "#{host} #{port} - not accepting connections"
+    sleep(10)
+  end
+
+  puts "#{host} #{port} - accepting connections"
+end
+
+def wait_for_vmdb
+  loop do
+    db_state = `cd /var/www/miq/vmdb; bin/rails r "require './lib/tasks/evm_application'; puts EvmApplication.server_state"`
+    break if db_state.chomp.strip != "no_db"
+
+    puts "VMDB not ready yet"
+    sleep(10)
+  end
+
+  puts "VMDB is up and running"
+end
+
+database_yml = YAML.load_file("/var/www/miq/vmdb/config/database.yml")
+
+host = database_yml.dig("production", "host")
+port = database_yml.dig("production", "port") || 5432
+
+wait_for_service(host, port)
+wait_for_vmdb
+
+SdNotify.ready
