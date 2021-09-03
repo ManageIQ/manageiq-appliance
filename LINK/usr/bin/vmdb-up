@@ -2,6 +2,7 @@
 
 require "yaml"
 require "sd_notify"
+require "manageiq-password"
 
 $stdout.sync = true
 
@@ -17,19 +18,20 @@ def wait_for_service(host, port)
   puts "#{host} #{port} - accepting connections"
 end
 
-def wait_for_database
-  database_yml = YAML.load_file("/var/www/miq/vmdb/config/database.yml")
-
-  host = database_yml.dig("production", "host")
-  port = database_yml.dig("production", "port") || 5432
-
-  wait_for_service(host, port)
+def wait_for_database(db_yaml, env = "production")
+  host, port = db_yaml[env].values_at("host", "port")
+  wait_for_service(host, port || 5432)
 end
 
-def wait_for_vmdb
+def wait_for_vmdb(db_yaml, env = "production")
+  host, port, dbname, password = db_yaml[env].values_at("host", "port", "database", "password")
+  password = ManageIQ::Password.decrypt(password)
+
+  my_guid = File.read("/var/www/miq/vmdb/GUID")
+
   loop do
-    db_state = `cd /var/www/miq/vmdb; bin/rails r "require './lib/tasks/evm_application'; puts EvmApplication.server_state"`
-    break if db_state.chomp.strip != "no_db"
+    results = `PGPASSWORD=#{password} psql --host=#{host} --port=#{port || 5432} --dbname=#{dbname} --command="SELECT id FROM miq_servers WHERE guid='#{my_guid}'"`
+    break if $?.success? && results.include?("(1 row)")
 
     puts "VMDB not ready yet"
     sleep(10)
@@ -38,8 +40,9 @@ def wait_for_vmdb
   puts "VMDB is up and running"
 end
 
+database_yml = YAML.load_file("/var/www/miq/vmdb/config/database.yml")
 
-wait_for_database
-wait_for_vmdb
+wait_for_database(database_yml)
+wait_for_vmdb(database_yml)
 
 SdNotify.ready
