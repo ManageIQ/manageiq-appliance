@@ -1,7 +1,7 @@
 [Unit]
 Description=EVM server daemon
-After=syslog.target memcached.service
-Wants=memcached.service
+After=memcached.service vmdb-up.service
+Wants=memcached.service vmdb-up.service
 
 [Service]
 WorkingDirectory=/var/www/miq/vmdb
