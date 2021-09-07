@@ -28,8 +28,8 @@ def wait_for_manageiq_db(db_yaml, env = "production")
   password = ManageIQ::Password.decrypt(password)
 
   loop do
-    results = `PGPASSWORD=#{password} psql --host=#{host} --port=#{port || 5432} --dbname=#{dbname} --command="SELECT FROM miq_regions LIMIT 1"`
-    break if $?.success? && results.include?("(1 row)")
+    results = `PGPASSWORD=#{password} psql --host=#{host} --port=#{port || 5432} --dbname=#{dbname} --tuples-only --no-align --command="SELECT COUNT(*) FROM miq_regions"`
+    break if $?.success? && results.to_i > 0
 
     puts "ManageIQ DB not ready yet"
     sleep(10)
