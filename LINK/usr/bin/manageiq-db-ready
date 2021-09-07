@@ -23,7 +23,7 @@ def wait_for_database(db_yaml, env = "production")
   wait_for_service(host, port || 5432)
 end
 
-def wait_for_vmdb(db_yaml, env = "production")
+def wait_for_manageiq_db(db_yaml, env = "production")
   host, port, dbname, password = db_yaml[env].values_at("host", "port", "database", "password")
   password = ManageIQ::Password.decrypt(password)
 
@@ -31,16 +31,16 @@ def wait_for_vmdb(db_yaml, env = "production")
     results = `PGPASSWORD=#{password} psql --host=#{host} --port=#{port || 5432} --dbname=#{dbname} --command="SELECT FROM miq_regions LIMIT 1"`
     break if $?.success? && results.include?("(1 row)")
 
-    puts "VMDB not ready yet"
+    puts "ManageIQ DB not ready yet"
     sleep(10)
   end
 
-  puts "VMDB is up and running"
+  puts "ManageIQ DB is up and running"
 end
 
 database_yml = YAML.load_file("/var/www/miq/vmdb/config/database.yml")
 
 wait_for_database(database_yml)
-wait_for_vmdb(database_yml)
+wait_for_manageiq_db(database_yml)
 
 SdNotify.ready
