@@ -25,7 +25,7 @@ end
 
 def wait_for_manageiq_db(db_yaml, env = "production")
   host, port, dbname, password = db_yaml[env].values_at("host", "port", "database", "password")
-  password = ManageIQ::Password.decrypt(password)
+  password = ManageIQ::Password.try_decrypt(password)
 
   loop do
     results = `PGPASSWORD=#{password} psql --host=#{host} --port=#{port || 5432} --dbname=#{dbname} --tuples-only --no-align --command="SELECT COUNT(*) FROM miq_regions"`
