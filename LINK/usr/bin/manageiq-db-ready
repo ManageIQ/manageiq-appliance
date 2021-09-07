@@ -31,11 +31,11 @@ def wait_for_manageiq_db(db_yaml, env = "production")
     results = `PGPASSWORD=#{password} psql --host=#{host} --port=#{port || 5432} --dbname=#{dbname} --tuples-only --no-align --command="SELECT COUNT(*) FROM miq_regions"`
     break if $?.success? && results.to_i > 0
 
-    puts "ManageIQ DB not ready yet"
+    puts "#{dbname} is not ready yet"
     sleep(10)
   end
 
-  puts "ManageIQ DB is up and running"
+  puts "#{dbname} is up and running"
 end
 
 database_yml = YAML.load_file("/var/www/miq/vmdb/config/database.yml")
