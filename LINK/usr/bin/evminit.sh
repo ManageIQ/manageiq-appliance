@@ -15,6 +15,8 @@ PID_DIR=$VMDBDIR/tmp/pids
 echo `date -u` 'EVMINIT   EVM Appliance Booted' >> $EVMLOG
 rm -rfv $PID_DIR/evm.pid >> $EVMLOG
 
+# Generate certs/server.cer if it doesn't exist
+/usr/bin/generate_miq_server_cert.sh
 
 # Rescan for LVM Physical Volumes since RHEV DirectLUN PV's aren't always found.
 # Skip pvscan when running on container platforms
