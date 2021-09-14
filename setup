@@ -1,8 +1,0 @@
-#!/bin/bash
-script_path=$(dirname "$(readlink -f $0)")
-
-# Symlink all files/directories below LINK
-cp -sRv $script_path/LINK/* /
-
-# Copy all files/directories below COPY
-cp -Rv $script_path/COPY/* /
