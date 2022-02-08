@@ -2,14 +2,21 @@
 #
 # Description: Sets the environment for scripts and console users
 #
-
 # for all properties files
-#   set variables from all lines (skipping comments and blank lines)
-# see systemd EnvironmentFile for info on the file format
+#   prune off comment portion of line
+#   pull off variable and the value (remove trailing spaces)
+#   export the variable
+#
 for prop in /etc/default/*.properties ; do
   while read -r line ; do
-    if [[ ! $line =~ ^(#|;|$) ]] ; then
-      export $line
+    line=${line%% #*}
+    if [[ $line =~ ^([A-Za-z0-9_]*)\ *=\ *[\"\']?([^\"\']*)[\"\']?\ *$ ]] ; then
+      VAR="${BASH_REMATCH[1]}"
+      VALUE="${BASH_REMATCH[2]}"
+      VALUE="${VALUE%% *}"
+      export ${VAR}="${VALUE}"
+    elif [[ -n "$line" && ! $line =~ ^\ *#.*$ ]] ; then 
+      echo "bad property in ${prop}: ${line}" >&2
     fi
   done < $prop
 done
