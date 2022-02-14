@@ -1,5 +1,5 @@
 [Unit]
-Description="Initializes the evm environment"
+Description="Initialize the evm environment"
 After=syslog.target
 
 [Service]
