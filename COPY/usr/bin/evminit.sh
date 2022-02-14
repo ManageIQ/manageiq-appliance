@@ -5,15 +5,9 @@
 
 [[ -s /etc/default/evm ]] && source /etc/default/evm
 
-# Some variables to shorten things
-VMDBDIR=/var/www/miq/vmdb
-EVMLOG=$VMDBDIR/log/evm.log
-PID_DIR=$VMDBDIR/tmp/pids
-
-
 # Log to evm.log that appliance booted
-echo `date -u` 'EVMINIT   EVM Appliance Booted' >> $EVMLOG
-rm -rfv $PID_DIR/evm.pid >> $EVMLOG
+echo `date -u` 'EVMINIT   EVM Appliance Booted'
+rm -rfv /var/www/miq/vmdb/tmp/pids/evm.pid
 
 # Generate certs/server.cer if it doesn't exist
 /usr/bin/generate_miq_server_cert.sh
