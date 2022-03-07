@@ -13,6 +13,7 @@ OIDCOAuthClientID                  <%= oidc_client_id %>
 OIDCOAuthClientSecret              <%= oidc_client_secret %>
 OIDCOAuthIntrospectionEndpoint     <%= oidc_introspection_endpoint %>
 OIDCOAuthIntrospectionEndpointAuth client_secret_basic
+OIDCCookieSameSite                 On
 
 <Location /oidc_login>
   AuthType  openid-connect
