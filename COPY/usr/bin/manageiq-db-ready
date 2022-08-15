@@ -6,41 +6,43 @@ require "manageiq-password"
 
 $stdout.sync = true
 
-def wait_for_service(host, port)
-  loop do
-    `ncat #{host} #{port} </dev/null 2>/dev/null`
-    break if $?.success?
-
-    puts "#{host} #{port} - not accepting connections"
-    sleep(10)
-  end
-
-  puts "#{host} #{port} - accepting connections"
+def service_ready?(host, port)
+  `ncat #{host} #{port} </dev/null 2>/dev/null`
+  $?.success?
 end
 
-def wait_for_database(db_yaml, env = "production")
+def database_ready?(db_yaml, env = "production")
   host, port = db_yaml[env].values_at("host", "port")
-  wait_for_service(host, port || 5432)
+  if service_ready?(host, port || 5432)
+    puts "#{host} #{port} - accepting connections"
+    true
+  else
+    puts "#{host} #{port} - not accepting connections"
+    false
+  end
 end
 
-def wait_for_manageiq_db(db_yaml, env = "production")
+def manageiq_db_ready?(db_yaml, env = "production")
   host, port, dbname, password = db_yaml[env].values_at("host", "port", "database", "password")
   password = ManageIQ::Password.try_decrypt(password)
 
-  loop do
-    results = `PGPASSWORD=#{password} psql --host=#{host} --port=#{port || 5432} --dbname=#{dbname} --tuples-only --no-align --command="SELECT COUNT(*) FROM miq_regions"`
-    break if $?.success? && results.to_i > 0
-
+  results = `PGPASSWORD=#{password} psql --host=#{host} --port=#{port || 5432} --dbname=#{dbname} --tuples-only --no-align --command="SELECT COUNT(*) FROM miq_regions"`
+  if $?.success? && results.to_i > 0
+    puts "#{dbname} is up and running"
+    true
+  else
     puts "#{dbname} is not ready yet"
-    sleep(10)
+    false
   end
-
-  puts "#{dbname} is up and running"
 end
 
-database_yml = YAML.load_file("/var/www/miq/vmdb/config/database.yml")
+loop do
+  # reload the database yaml in case it changes between checks
+  database_yml = YAML.load_file("/var/www/miq/vmdb/config/database.yml")
 
-wait_for_database(database_yml)
-wait_for_manageiq_db(database_yml)
+  break if database_ready?(database_yml) && manageiq_db_ready?(database_yml)
+
+  sleep(10)
+end
 
 SdNotify.ready
