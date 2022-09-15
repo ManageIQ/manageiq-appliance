@@ -13,7 +13,9 @@ end
 
 def database_ready?(db_yaml, env = "production")
   host, port = db_yaml[env].values_at("host", "port")
-  if service_ready?(host, port || 5432)
+  host ||= "localhost"
+  port ||= 5432
+  if service_ready?(host, port)
     puts "#{host} #{port} - accepting connections"
     true
   else
@@ -26,7 +28,12 @@ def manageiq_db_ready?(db_yaml, env = "production")
   host, port, dbname, password = db_yaml[env].values_at("host", "port", "database", "password")
   password = ManageIQ::Password.try_decrypt(password)
 
-  results = `PGPASSWORD=#{password} psql --host=#{host} --port=#{port || 5432} --dbname=#{dbname} --tuples-only --no-align --command="SELECT COUNT(*) FROM miq_regions"`
+  # If not present, let psql decide to use localhost, socket, etc.
+  host_arg = host.nil?     ? "" : "--host=#{host}"
+  port_arg = port.nil?     ? "" : "--port=#{port}"
+  pass_arg = password.nil? ? "" : "PGPASSWORD=#{password}"
+
+  results = `#{pass_arg} psql #{host_arg} #{port_arg} --dbname=#{dbname} --tuples-only --no-align --command="SELECT COUNT(*) FROM miq_regions"`
   if $?.success? && results.to_i > 0
     puts "#{dbname} is up and running"
     true
