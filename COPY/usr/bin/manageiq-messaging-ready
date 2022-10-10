@@ -31,8 +31,8 @@ def manageiq_msging_ready?(msg_yaml, env = "production")
 
   # Test broker connection by publishing message to queue and immediately consuming message
   broker = ManageIQ::Messaging::Client.open(options)
-  broker.publish_message(:service => "test-messaging-ready", :message => "test message", :payload => {})
-  broker.subscribe_messages(:service => "test-messaging-ready") { break }
+  broker.publish_message(:service => "manageiq.liveness-check", :message => "test message", :payload => {})
+  broker.subscribe_messages(:service => "manageiq.liveness-check") { break }
 rescue => err
   puts err
   puts "Kafka is not ready yet"
