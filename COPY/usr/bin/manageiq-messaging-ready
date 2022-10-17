@@ -25,9 +25,9 @@ def messaging_ready?(msg_yaml, env = "production")
 end
 
 def manageiq_msging_ready?(msg_yaml, env = "production")
-  options = msg_yaml[env].symbolize_keys.tap { |key| key[:host] = key.delete(:hostname) }
-  options[:"sasl.password"] = ManageIQ::Password.try_decrypt(options[:"sasl.password"]) if options[:"sasl.password"]
-  options.merge!(:client_ref => "test", :protocol => "Kafka", :encoding => "json")
+  options = msg_yaml[env].symbolize_keys
+  options[:password] = ManageIQ::Password.try_decrypt(options[:password]) if options[:password]
+  options[:client_ref] = "manageiq-messaging-ready"
 
   # Test broker connection by publishing message to queue and immediately consuming message
   broker = ManageIQ::Messaging::Client.open(options)
