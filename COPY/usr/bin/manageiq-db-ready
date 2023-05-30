@@ -23,10 +23,10 @@ def database_ready?(db_yaml, env = "production")
 end
 
 def manageiq_db_ready?(db_yaml, env = "production")
-  host, port, dbname, password = db_yaml[env].values_at("host", "port", "database", "password")
+  host, port, dbname, password, username = db_yaml[env].values_at("host", "port", "database", "password", "username")
   password = ManageIQ::Password.try_decrypt(password)
 
-  results = `PGPASSWORD=#{password} psql --host=#{host} --port=#{port || 5432} --dbname=#{dbname} --tuples-only --no-align --command="SELECT COUNT(*) FROM miq_regions"`
+  results = `PGPASSWORD=#{password} psql -U #{username || 'root'} --host=#{host} --port=#{port || 5432} --dbname=#{dbname} --tuples-only --no-align --command="SELECT COUNT(*) FROM miq_regions"`
   if $?.success? && results.to_i > 0
     puts "#{dbname} is up and running"
     true
