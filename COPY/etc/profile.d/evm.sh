@@ -13,7 +13,7 @@ function tailmiq() # If no value is given with tailmiq it defaults to the manage
 {
   journalctl -f -u ${1:-manageiq* -u evm*}
 }
-alias tailpglog='tail -f $APPLIANCE_PG_DATA/pg_log/postgresql.log'
+alias tailpglog='tail -f $APPLIANCE_PG_DATA/log/postgresql.log'
 
 # Appliance Status:
 alias apstatus='systemctl status --no-pager evmserverd manageiq.slice httpd memcached postgresql repmgr* -n 0; \
