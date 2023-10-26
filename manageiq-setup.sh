@@ -31,9 +31,9 @@ semodule -r cockpit_ws_miq || true
 [ -x /sbin/restorecon ] && /sbin/restorecon -R -v ${APPLIANCE_SOURCE_DIRECTORY}/logrotate_free_space_check.sh
 [ -x /sbin/restorecon ] && /sbin/restorecon -R -v /usr/bin
 
-# relabel the pg_log directory in postgresql datadir, but defer restorecon
+# relabel the log directory in postgresql datadir, but defer restorecon
 # until after the database is initialized during firstboot configuration
-/usr/sbin/semanage fcontext -a -t var_log_t "${APPLIANCE_PG_DATA}/pg_log(/.*)?"
+/usr/sbin/semanage fcontext -a -t var_log_t "${APPLIANCE_PG_DATA}/log(/.*)?"
 
 # setup label for postgres client certs, but relabel after dir is created
 /usr/sbin/semanage fcontext -a -t cert_t "/root/.postgresql(/.*)?"

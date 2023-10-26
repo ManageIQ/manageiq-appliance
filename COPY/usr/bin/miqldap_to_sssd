@@ -1,5 +1,0 @@
-#!/bin/bash
-# description: ManageIQ miq_config_sssd_ldap launcher for a conversion from MiqLdap
-
-cd /var/www/miq/vmdb
-bundle exec ruby tools/miq_config_sssd_ldap.rb convert $@
