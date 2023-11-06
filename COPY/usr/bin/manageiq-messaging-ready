@@ -42,10 +42,33 @@ else
   true
 end
 
+def initialize_topics(msg_yaml, env = "production")
+  require "shellwords"
+
+  host, port = msg_yaml[env].values_at("host", "port")
+  host ||= "127.0.0.1"
+  port ||= 9092
+  bootstrap_server = Shellwords.shellescape("#{host}:#{port}")
+
+  `/opt/kafka/bin/kafka-topics.sh --create --topic manageiq.ems --bootstrap-server #{bootstrap_server} --command-config /opt/kafka/config/client.properties`
+  `/opt/kafka/bin/kafka-topics.sh --create --topic manageiq.ems-events --bootstrap-server #{bootstrap_server} --command-config /opt/kafka/config/client.properties`
+  `/opt/kafka/bin/kafka-topics.sh --create --topic manageiq.ems-inventory --bootstrap-server #{bootstrap_server} --command-config /opt/kafka/config/client.properties`
+  `/opt/kafka/bin/kafka-topics.sh --create --topic manageiq.metrics --bootstrap-server #{bootstrap_server} --command-config /opt/kafka/config/client.properties`
+
+rescue => err
+  puts err
+  puts "Topic initialization unsuccessful"
+else
+  puts "Topics initialized successfully"
+end
+
 loop do
   messaging_yaml = YAML.load_file("/var/www/miq/vmdb/config/messaging.yml")
 
-  break if messaging_ready?(messaging_yaml) && manageiq_msging_ready?(messaging_yaml)
+  if messaging_ready?(messaging_yaml) && manageiq_msging_ready?(messaging_yaml)
+    initialize_topics(messaging_yaml)
+    break
+  end
 
   sleep(10)
 end
