@@ -11,9 +11,8 @@ def service_ready?(host, port)
 end
 
 def messaging_ready?(msg_yaml, env = "production")
-  host, port = msg_yaml[env].values_at("hostname", "port")
-  host ||= "127.0.0.1"
-  port ||= 9092
+  host = msg_yaml[env].fetch("host", "127.0.0.1")
+  port = msg_yaml[env].fetch("port", 9092)
 
   if service_ready?(host, port)
     puts "#{host} #{port} - accepting connections"
@@ -45,9 +44,8 @@ end
 def initialize_topics(msg_yaml, env = "production")
   require "shellwords"
 
-  host, port = msg_yaml[env].values_at("host", "port")
-  host ||= "127.0.0.1"
-  port ||= 9092
+  host = msg_yaml[env].fetch("host", "127.0.0.1")
+  port = msg_yaml[env].fetch("port", 9092)
   bootstrap_server = Shellwords.shellescape("#{host}:#{port}")
 
   `/opt/kafka/bin/kafka-topics.sh --create --topic manageiq.ems --bootstrap-server #{bootstrap_server} --command-config /opt/kafka/config/client.properties`
