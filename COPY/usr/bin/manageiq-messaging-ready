@@ -28,10 +28,9 @@ def manageiq_msging_ready?(msg_yaml, env = "production")
   options[:password] = ManageIQ::Password.try_decrypt(options[:password]) if options[:password]
   options[:client_ref] = "manageiq-messaging-ready"
 
-  # Test broker connection by publishing message to queue and immediately consuming message
+  # Test broker connection by listing topics
   broker = ManageIQ::Messaging::Client.open(options)
-  broker.publish_message(:service => "manageiq.liveness-check", :message => "test message", :payload => {})
-  broker.subscribe_messages(:service => "manageiq.liveness-check") { break }
+  broker.topics
 rescue => err
   puts err
   puts "Kafka is not ready yet"
@@ -39,6 +38,8 @@ rescue => err
 else
   puts "Kafka is up and running"
   true
+ensure
+  broker&.close
 end
 
 def initialize_topics(msg_yaml, env = "production")
