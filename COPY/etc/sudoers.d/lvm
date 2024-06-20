@@ -1,0 +1,2 @@
+Defaults:manageiq !requiretty
+manageiq ALL = NOPASSWD: /usr/sbin/lvchange, /usr/sbin/lvs
