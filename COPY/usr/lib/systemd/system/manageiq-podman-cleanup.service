@@ -1,0 +1,10 @@
+[Unit]
+Description="Podman Initialization"
+After=syslog.target
+
+[Service]
+ExecStart=/bin/manageiq-podman-cleanup
+Type=oneshot
+
+[Install]
+WantedBy=multi-user.target

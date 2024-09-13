@@ -1,0 +1,9 @@
+#!/bin/bash
+
+manageiq_uid=$(id -u manageiq)
+podman_tmpdir=/tmp/storage-run-${manageiq_uid}
+
+if [ -d ${podman_tmpdir} ]
+then
+  /bin/rm -rf ${podman_tmpdir}
+fi
