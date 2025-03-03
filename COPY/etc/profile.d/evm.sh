@@ -8,6 +8,10 @@ alias apcli='appliance_console_cli'
 alias vmdb='cd /var/www/miq/vmdb'
 alias appliance='[[ -n ${APPLIANCE_SOURCE_DIRECTORY} ]] && cd ${APPLIANCE_SOURCE_DIRECTORY}'
 
+# Define an alias to override any rubygems binstubs
+# to ensure it's run through the application's bundle.
+alias appliance_console='bundle exec appliance_console'
+
 # Tail Logs:
 function tailmiq() # If no value is given with tailmiq it defaults to the manageiq* and evm* units
 {
