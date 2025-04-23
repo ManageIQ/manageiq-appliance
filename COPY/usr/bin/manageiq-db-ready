@@ -36,11 +36,22 @@ def manageiq_db_ready?(db_yaml, env = "production")
   end
 end
 
+def manageiq_db_migrations_current?
+  system("bin/rake db:abort_if_pending_migrations", :chdir => "/var/www/miq/vmdb")
+  if $?.success?
+    puts "migrations are up to date"
+    true
+  else
+    puts "there are pending migrations, run bin/rake db:migrate"
+    false
+  end
+end
+
 loop do
   # reload the database yaml in case it changes between checks
   database_yml = YAML.load_file("/var/www/miq/vmdb/config/database.yml")
 
-  break if database_ready?(database_yml) && manageiq_db_ready?(database_yml)
+  break if database_ready?(database_yml) && manageiq_db_ready?(database_yml) && manageiq_db_migrations_current?
 
   sleep(10)
 end
