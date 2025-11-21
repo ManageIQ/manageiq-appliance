@@ -9,6 +9,7 @@ OIDCRedirectURI                    https://<%= miq_appliance %>/oidc_login/redir
 OIDCCryptoPassphrase               sp-cookie
 OIDCOAuthRemoteUserClaim           username
 OIDCCacheShmEntrySizeMax           65536
+OIDCCacheShmMax                    500
 OIDCOAuthClientID                  <%= oidc_client_id %>
 OIDCOAuthClientSecret              <%= oidc_client_secret %>
 OIDCOAuthIntrospectionEndpoint     <%= oidc_introspection_endpoint %>
