@@ -16,23 +16,30 @@ OIDCOAuthIntrospectionEndpoint     <%= oidc_introspection_endpoint %>
 OIDCOAuthIntrospectionEndpointAuth client_secret_basic
 OIDCCookieSameSite                 On
 
+# CSP for OIDC authentication redirects - allows inline styles/scripts needed by auth flow
 <Location /oidc_login>
-  AuthType  openid-connect
-  Require   valid-user
-  FileETag  None
-  Header    Set Cache-Control "max-age=0, no-store, no-cache, must-revalidate"
-  Header    Set Pragma "no-cache"
-  Header    Unset ETag
+  AuthType                   openid-connect
+  Require                    valid-user
+  FileETag                   None
+  Header always set Strict-Transport-Security "max-age=631138519"
+  Header set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; base-uri 'self'; form-action 'self'; frame-ancestors 'self'; report-uri /dashboard/csp_report; report-to csp-endpoint"
+  Header set Report-To       "{\"group\":\"csp-endpoint\",\"max_age\":10886400,\"endpoints\":[{\"url\":\"/dashboard/csp_report\"}]}"
+  Header Set Cache-Control   "max-age=0, no-store, no-cache, must-revalidate"
+  Header Set Pragma          "no-cache"
+  Header Unset ETag
 </Location>
 
 <Location /ui/service/oidc_login>
-  AuthType  openid-connect
-  Require   valid-user
-  FileETag  None
-  Header    Set Cache-Control "max-age=0, no-store, no-cache, must-revalidate"
-  Header    Set Pragma "no-cache"
-  Header    Set Set-Cookie "miq_oidc_access_token=%{OIDC_access_token}e; Max-Age=10; Path=/ui/service"
-  Header    Unset ETag
+  AuthType                   openid-connect
+  Require                    valid-user
+  FileETag                   None
+  Header always set Strict-Transport-Security "max-age=631138519"
+  Header set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; base-uri 'self'; form-action 'self'; frame-ancestors 'self'; report-uri /dashboard/csp_report; report-to csp-endpoint"
+  Header set Report-To       "{\"group\":\"csp-endpoint\",\"max_age\":10886400,\"endpoints\":[{\"url\":\"/dashboard/csp_report\"}]}"
+  Header Set Cache-Control   "max-age=0, no-store, no-cache, must-revalidate"
+  Header Set Pragma          "no-cache"
+  Header Set Set-Cookie      "miq_oidc_access_token=%{OIDC_access_token}e; Max-Age=10; Path=/ui/service"
+  Header Unset ETag
 </Location>
 
 <LocationMatch ^/api(?!\/(v[\d\.]+\/)?product_info$)>
