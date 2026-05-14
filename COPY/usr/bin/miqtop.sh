@@ -11,7 +11,6 @@ PID_FILE=${PID_DIR}/top.pid
 ### Attempt to create pid and log directores in case they do not exist ###
 mkdir -p ${PID_DIR}
 mkdir -p ${LOG_DIR}
-chown ${USER}:${USER} ${PID_DIR} ${LOG_DIR}
 
 ### If an instance of top(1) in running, do not start another. ###
 if [ -e ${PID_FILE} ]
