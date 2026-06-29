@@ -2,20 +2,26 @@ LoadModule auth_openidc_module modules/mod_auth_openidc.so
 ServerName https://<%= miq_appliance %>
 LogLevel   warn
 
-OIDCProviderMetadataURL            <%= oidc_provider_metadata_url %>
-OIDCCLientID                       <%= oidc_client_id %>
+OIDCClientID                       <%= oidc_client_id %>
 OIDCClientSecret                   <%= oidc_client_secret %>
-OIDCRedirectURI                    https://<%= miq_appliance %>/oidc_login/redirect_uri
-OIDCCryptoPassphrase               sp-cookie
-OIDCOAuthRemoteUserClaim           username
-OIDCCacheShmEntrySizeMax           65536
-OIDCCacheShmMax                    500
 OIDCOAuthClientID                  <%= oidc_client_id %>
 OIDCOAuthClientSecret              <%= oidc_client_secret %>
+
+OIDCProviderMetadataURL            <%= oidc_provider_metadata_url %>
+
 OIDCOAuthIntrospectionEndpoint     <%= oidc_introspection_endpoint %>
-OIDCPassClaimsAs                   both none
 OIDCOAuthIntrospectionEndpointAuth client_secret_basic
+
+OIDCRedirectURI                    https://<%= miq_appliance %>/oidc_login/redirect_uri
+
+OIDCOAuthRemoteUserClaim           username
+OIDCPassClaimsAs                   both none
+
+OIDCCacheShmEntrySizeMax           65536
+OIDCCacheShmMax                    500
+
 OIDCCookieSameSite                 On
+OIDCCryptoPassphrase               sp-cookie
 
 # CSP for OIDC authentication redirects - allows inline styles/scripts needed by auth flow
 <Location /oidc_login>
