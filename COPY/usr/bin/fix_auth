@@ -1,5 +1,5 @@
 #!/bin/bash
 # description: ManageIQ fix_auth launcher
 
-cd /var/www/miq/vmdb
+cd /usr/lib/manageiq/manageiq
 bundle exec ruby tools/fix_auth.rb "$@"

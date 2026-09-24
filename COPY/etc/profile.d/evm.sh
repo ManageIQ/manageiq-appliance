@@ -5,7 +5,7 @@
 # Aliases:
 alias ap='appliance_console'
 alias apcli='appliance_console_cli'
-alias vmdb='cd /var/www/miq/vmdb'
+alias vmdb='cd /usr/lib/manageiq/manageiq'
 alias appliance='[[ -n ${APPLIANCE_SOURCE_DIRECTORY} ]] && cd ${APPLIANCE_SOURCE_DIRECTORY}'
 
 # Define an alias to override any rubygems binstubs
