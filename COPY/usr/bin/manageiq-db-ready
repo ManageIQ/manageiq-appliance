@@ -37,7 +37,7 @@ def manageiq_db_ready?(db_yaml, env = "production")
 end
 
 def manageiq_db_migrations_current?
-  system("bin/rake db:abort_if_pending_migrations", :chdir => "/var/www/miq/vmdb")
+  system("bin/rake db:abort_if_pending_migrations", :chdir => "/usr/lib/manageiq/manageiq")
   if $?.success?
     puts "migrations are up to date"
     true

@@ -49,10 +49,10 @@ def initialize_topics(msg_yaml, env = "production")
   port = msg_yaml[env].fetch("port", 9092)
   bootstrap_server = Shellwords.shellescape("#{host}:#{port}")
 
-  `/opt/kafka/bin/kafka-topics.sh --create --topic manageiq.ems --bootstrap-server #{bootstrap_server} --command-config /opt/kafka/config/client.properties`
-  `/opt/kafka/bin/kafka-topics.sh --create --topic manageiq.ems-events --bootstrap-server #{bootstrap_server} --command-config /opt/kafka/config/client.properties`
-  `/opt/kafka/bin/kafka-topics.sh --create --topic manageiq.ems-inventory --bootstrap-server #{bootstrap_server} --command-config /opt/kafka/config/client.properties`
-  `/opt/kafka/bin/kafka-topics.sh --create --topic manageiq.metrics --bootstrap-server #{bootstrap_server} --command-config /opt/kafka/config/client.properties`
+  `/opt/kafka/bin/kafka-topics.sh --create --topic manageiq.ems --bootstrap-server #{bootstrap_server} --command-config /etc/kafka/config/client.properties`
+  `/opt/kafka/bin/kafka-topics.sh --create --topic manageiq.ems-events --bootstrap-server #{bootstrap_server} --command-config /etc/kafka/config/client.properties`
+  `/opt/kafka/bin/kafka-topics.sh --create --topic manageiq.ems-inventory --bootstrap-server #{bootstrap_server} --command-config /etc/kafka/config/client.properties`
+  `/opt/kafka/bin/kafka-topics.sh --create --topic manageiq.metrics --bootstrap-server #{bootstrap_server} --command-config /etc/kafka/config/client.properties`
 
 rescue => err
   puts err

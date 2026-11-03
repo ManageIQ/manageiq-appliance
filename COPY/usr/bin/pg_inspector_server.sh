@@ -5,4 +5,4 @@ export PGPASSWORD="${PGPASSWORD:-smartvm}"
 [[ -s /etc/default/evm ]] && source /etc/default/evm
 export PATH=$PATH:/usr/local/bin
 
-/var/www/miq/vmdb/tools/pg_inspector/inspect_pg_server.rb
+/usr/lib/manageiq/manageiq/tools/pg_inspector/inspect_pg_server.rb
